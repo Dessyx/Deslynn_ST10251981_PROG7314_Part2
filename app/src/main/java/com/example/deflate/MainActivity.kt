@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         // Set up button click listener
         val letsBeginButton = findViewById<TextView>(R.id.lets_begin_button)
         letsBeginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
     }
