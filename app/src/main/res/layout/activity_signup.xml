@@ -21,10 +21,10 @@
         android:padding="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.019">
+        app:layout_constraintVertical_bias="0.238">
 
         <!-- Sign Up Title -->
         <TextView
@@ -123,17 +123,21 @@
             android:textSize="16sp" />
 
         <!-- Register Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/register_button"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginBottom="24dp"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/button_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:text="Register"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
-
+            app:layout_constraintTop_toBottomOf="@+id/title_text"
+            app:layout_constraintVertical_chainStyle="packed" />
         <!-- Login Link -->
         <LinearLayout
             android:layout_width="wrap_content"

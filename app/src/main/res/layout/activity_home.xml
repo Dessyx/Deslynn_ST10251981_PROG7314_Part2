@@ -2,17 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_layout"
+    android:id="@+id/home_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".HomeActivity">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:text="Sign In"
+        android:id="@+id/textView"
+        android:layout_width="151dp"
+        android:layout_height="36dp"
+        android:text="HomeScreen"
         android:textSize="25sp"
-        tools:layout_editor_absoluteX="186dp"
-        tools:layout_editor_absoluteY="203dp" />
+        tools:layout_editor_absoluteX="130dp"
+        tools:layout_editor_absoluteY="173dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

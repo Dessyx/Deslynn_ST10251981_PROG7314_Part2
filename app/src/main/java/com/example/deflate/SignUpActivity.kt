@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Patterns
-import android.widget.Button
+import com.google.android.material.button.MaterialButton
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -19,7 +19,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var surnameEditText: EditText
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
-    private lateinit var registerButton: Button
+    private lateinit var registerButton: MaterialButton
     private lateinit var loginLink: TextView
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,8 +176,8 @@ class SignUpActivity : AppCompatActivity() {
             // Clear form
             clearForm()
             
-            // Navigate to login or main activity
-            navigateToLogin()
+            // Navigate to home screen
+            navigateToHome()
             
         }, 2000) // 2 second delay to simulate network call
     }
@@ -188,6 +188,12 @@ class SignUpActivity : AppCompatActivity() {
         usernameEditText.text.clear()
         passwordEditText.text.clear()
         clearErrors()
+    }
+    
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish() // Close signup activity
     }
     
     private fun navigateToLogin() {
