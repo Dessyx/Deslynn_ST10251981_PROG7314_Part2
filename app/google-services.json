@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "592716643926",
+    "project_id": "deflate-fc99e",
+    "storage_bucket": "deflate-fc99e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592716643926:android:97d473c50d3b6181aa05f7",
+        "android_client_info": {
+          "package_name": "com.example.deflate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbZnfupZQWs_fBkiSveyXAZMFtCOhjlLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

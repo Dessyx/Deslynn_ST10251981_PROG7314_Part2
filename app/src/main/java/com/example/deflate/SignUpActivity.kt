@@ -3,6 +3,7 @@ package com.example.deflate
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import com.google.android.material.button.MaterialButton
 import android.widget.EditText
@@ -12,15 +13,27 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
     
+    companion object {
+        private const val TAG = "SignUpActivity"
+    }
+    
     private lateinit var nameEditText: EditText
     private lateinit var surnameEditText: EditText
-    private lateinit var usernameEditText: EditText
+private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var registerButton: MaterialButton
     private lateinit var loginLink: TextView
+    
+    // Firebase instances
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +45,27 @@ class SignUpActivity : AppCompatActivity() {
             insets
         }
 
+        // Initialize Firebase
+        initializeFirebase()
+        
         // Initialize views
         initializeViews()
         
         // Set up click listeners
         setupClickListeners()
+    }
+    
+    private fun initializeFirebase() {
+        try {
+            auth = FirebaseAuth.getInstance()
+            firestore = FirebaseFirestore.getInstance()
+            Log.d(TAG, "Firebase initialized successfully")
+            Log.d(TAG, "Firebase Auth instance: $auth")
+            Log.d(TAG, "Firestore instance: $firestore")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize Firebase", e)
+            Toast.makeText(this, "Firebase initialization failed: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
     
     private fun initializeViews() {
@@ -76,8 +105,12 @@ class SignUpActivity : AppCompatActivity() {
         registerButton.isEnabled = false
         registerButton.text = "Registering..."
         
-        // Simulate registration process (replace with actual API call)
-        simulateRegistration(name, surname, username, password)
+        // Register user with Firebase
+        // registerUserWithFirebase(name, surname, username, password)
+        
+        // TEMPORARY: For testing without Firebase setup
+        // Uncomment the line below and comment out the line above if Firebase isn't configured yet
+        simulateRegistrationForTesting(name, surname, username, password)
     }
     
     private fun validateInputs(name: String, surname: String, username: String, password: String): Boolean {
@@ -160,26 +193,126 @@ class SignUpActivity : AppCompatActivity() {
         return hasCapitalLetter && hasSymbol && hasMinimumLength
     }
     
-    private fun simulateRegistration(name: String, surname: String, username: String, password: String) {
-        // Simulate network delay
+    private fun registerUserWithFirebase(name: String, surname: String, username: String, password: String) {
+        // Create user with email (using username as email for now)
+        val email = "$username@deflate.com" // You can modify this logic as needed
+        
+        Log.d(TAG, "Attempting to register user with email: $email")
+        
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "User created successfully")
+                    // User created successfully, now save additional data to Firestore
+                    val user = auth.currentUser
+                    user?.let {
+                        saveUserDataToFirestore(it.uid, name, surname, username, email)
+                    }
+                } else {
+                    // Registration failed - get detailed error
+                    val exception = task.exception
+                    Log.e(TAG, "Registration failed", exception)
+                    
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthException -> {
+                            when (exception.errorCode) {
+                                "ERROR_EMAIL_ALREADY_IN_USE" -> "This email is already registered"
+                                "ERROR_INVALID_EMAIL" -> "Invalid email format"
+                                "ERROR_WEAK_PASSWORD" -> "Password is too weak"
+                                "ERROR_NETWORK_REQUEST_FAILED" -> "Network error. Please check your internet connection"
+                                else -> {
+                                    // Handle CONFIGURATION_NOT_FOUND specifically
+                                    if (exception.message?.contains("CONFIGURATION_NOT_FOUND") == true) {
+                                        "Firebase Authentication not properly configured. Please check Firebase Console settings."
+                                    } else {
+                                        "Registration failed: ${exception.message}"
+                                    }
+                                }
+                            }
+                        }
+                        else -> {
+                            // Handle general Firebase exceptions
+                            val message = exception?.message ?: "Unknown error"
+                            when {
+                                message.contains("CONFIGURATION_NOT_FOUND") -> "Firebase Authentication not properly configured. Please check Firebase Console settings."
+                                message.contains("network error") || message.contains("timeout") -> "Network error. Please check your internet connection and try again."
+                                message.contains("PERMISSION_DENIED") -> "Firebase permissions not configured. Please check Firebase Console settings."
+                                else -> "Registration failed: $message"
+                            }
+                        }
+                    }
+                    
+                    handleRegistrationError(errorMessage)
+                }
+            }
+    }
+    
+    private fun saveUserDataToFirestore(uid: String, name: String, surname: String, username: String, email: String) {
+        val userData = hashMapOf(
+            "uid" to uid,
+            "name" to name,
+            "surname" to surname,
+            "username" to username,
+            "email" to email,
+            "createdAt" to Date(),
+            "isActive" to true
+        )
+        
+        Log.d(TAG, "Saving user data to Firestore for UID: $uid")
+        
+        firestore.collection("users")
+            .document(uid)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "User data saved successfully to Firestore")
+                // Data saved successfully
+                handleRegistrationSuccess(name, surname)
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Failed to save user data to Firestore", exception)
+                // Data save failed, but user is created in Auth
+                handleRegistrationError("User created but data save failed: ${exception.message}")
+            }
+    }
+    
+    private fun handleRegistrationSuccess(name: String, surname: String) {
+        val fullName = "$name $surname"
+        
+        // Show success message
+        Toast.makeText(this, "Registration successful! Welcome $fullName", Toast.LENGTH_LONG).show()
+        
+        // Reset button state
+        registerButton.isEnabled = true
+        registerButton.text = "Register"
+        
+        // Clear form
+        clearForm()
+        
+        // Navigate to home screen
+        navigateToHome()
+    }
+    
+    private fun handleRegistrationError(errorMessage: String) {
+        // Show error message
+        Toast.makeText(this, "Registration failed: $errorMessage", Toast.LENGTH_LONG).show()
+        
+        // Reset button state
+        registerButton.isEnabled = true
+        registerButton.text = "Register"
+    }
+    
+    // TEMPORARY: For testing without Firebase setup
+    private fun simulateRegistrationForTesting(name: String, surname: String, username: String, password: String) {
         registerButton.postDelayed({
-            // Simulate successful registration
             val fullName = "$name $surname"
+            Toast.makeText(this, "TEST MODE: Registration successful! Welcome $fullName", Toast.LENGTH_LONG).show()
             
-            // Show success message
-            Toast.makeText(this, "Registration successful! Welcome $fullName", Toast.LENGTH_LONG).show()
-            
-            // Reset button state
             registerButton.isEnabled = true
             registerButton.text = "Register"
             
-            // Clear form
             clearForm()
-            
-            // Navigate to home screen
             navigateToHome()
-            
-        }, 2000) // 2 second delay to simulate network call
+        }, 2000)
     }
     
     private fun clearForm() {
