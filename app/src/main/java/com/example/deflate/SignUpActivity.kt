@@ -106,11 +106,11 @@ private lateinit var usernameEditText: EditText
         registerButton.text = "Registering..."
         
         // Register user with Firebase
-        // registerUserWithFirebase(name, surname, username, password)
+registerUserWithFirebase(name, surname, username, password)
         
         // TEMPORARY: For testing without Firebase setup
         // Uncomment the line below and comment out the line above if Firebase isn't configured yet
-        simulateRegistrationForTesting(name, surname, username, password)
+       // simulateRegistrationForTesting(name, surname, username, password)
     }
     
     private fun validateInputs(name: String, surname: String, username: String, password: String): Boolean {
@@ -288,8 +288,8 @@ private lateinit var usernameEditText: EditText
         // Clear form
         clearForm()
         
-        // Navigate to home screen
-        navigateToHome()
+        // Navigate to login screen
+        navigateToLogin()
     }
     
     private fun handleRegistrationError(errorMessage: String) {
