@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/signin_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/signup_bg">
+
+
+
+    <!-- White card container -->
+    <LinearLayout
+        android:id="@+id/signin_card"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:padding="40dp">
+
+        <!-- Sign In Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:text="Sign In"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Username -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Username"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/username_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:hint="Enter your username"
+            android:textColor="@color/black"
+            android:textColorHint="#80000000"
+            android:textSize="16sp" />
+
+        <!-- Password -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Password"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/password_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:textColor="@color/black"
+            android:textColorHint="#80000000"
+            android:textSize="16sp" />
+
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_button"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/button_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Login"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <!-- Divider -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Or login with"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- SSO buttons: Google, Apple, Microsoft -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Google Button -->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"
+                app:icon="@drawable/google_icon"
+                app:iconGravity="start"
+                app:iconPadding="8dp"
+                app:iconTint="@null"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeWidth="0dp" />
+
+            <!-- Apple Button -->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"
+                app:icon="@drawable/apple_icon"
+                app:iconGravity="start"
+                app:iconPadding="8dp"
+                app:iconTint="@null"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeWidth="0dp" />
+
+            <!-- Microsoft Button -->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/windows_icon"
+                app:iconGravity="start"
+                app:iconPadding="8dp"
+                app:iconTint="@null"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeWidth="0dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
