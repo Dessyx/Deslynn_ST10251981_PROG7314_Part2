@@ -24,6 +24,12 @@ class MainActivity : AppCompatActivity() {
         letsBeginButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+            // Login link click listener
+            val loginLink = findViewById<TextView>(R.id.login_link)
+            loginLink.setOnClickListener {
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 }
