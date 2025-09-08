@@ -15,25 +15,37 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthCredential
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
     
     companion object {
         private const val TAG = "SignUpActivity"
+        private const val RC_SIGN_IN = 9001
     }
     
     private lateinit var nameEditText: EditText
     private lateinit var surnameEditText: EditText
-private lateinit var usernameEditText: EditText
+    private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var registerButton: MaterialButton
     private lateinit var loginLink: TextView
+    private lateinit var googleSignUpButton: MaterialButton
+    private lateinit var githubSignUpButton: MaterialButton
+    private lateinit var facebookSignUpButton: MaterialButton
     
     // Firebase instances
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var googleSignInClient: GoogleSignInClient
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +59,9 @@ private lateinit var usernameEditText: EditText
 
         // Initialize Firebase
         initializeFirebase()
+        
+        // Configure Google Sign-In
+        configureGoogleSignIn()
         
         // Initialize views
         initializeViews()
@@ -75,6 +90,9 @@ private lateinit var usernameEditText: EditText
         passwordEditText = findViewById(R.id.password_edittext)
         registerButton = findViewById(R.id.register_button)
         loginLink = findViewById(R.id.login_link)
+        googleSignUpButton = findViewById(R.id.google_signup_button)
+        githubSignUpButton = findViewById(R.id.github_signup_button)
+        facebookSignUpButton = findViewById(R.id.facebook_signup_button)
     }
     
     private fun setupClickListeners() {
@@ -86,6 +104,21 @@ private lateinit var usernameEditText: EditText
         // Login link click listener
         loginLink.setOnClickListener {
             navigateToLogin()
+        }
+        
+        // Google Sign-Up button click listener
+        googleSignUpButton.setOnClickListener {
+            signUpWithGoogle()
+        }
+        
+        // GitHub Sign-Up button click listener (placeholder)
+        githubSignUpButton.setOnClickListener {
+            handleGitHubSignUp()
+        }
+        
+        // Facebook Sign-Up button click listener (placeholder)
+        facebookSignUpButton.setOnClickListener {
+            handleFacebookSignUp()
         }
     }
     
@@ -335,6 +368,112 @@ registerUserWithFirebase(name, surname, username, password)
         finish() // Close signup activity
     }
     
+    private fun configureGoogleSignIn() {
+        // Configure Google Sign-In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    private fun signUpWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign-In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // Google Sign-In failed
+                Log.w(TAG, "Google sign in failed", e)
+                Toast.makeText(this, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = auth.currentUser
+                    handleGoogleSignUpSuccess(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun handleGoogleSignUpSuccess(user: com.google.firebase.auth.FirebaseUser?) {
+        user?.let {
+            val displayName = it.displayName ?: "User"
+            val email = it.email ?: ""
+            
+            // Save user data to Firestore
+            saveGoogleUserDataToFirestore(it.uid, displayName, email)
+            
+            Toast.makeText(this, "Welcome $displayName!", Toast.LENGTH_LONG).show()
+            navigateToHome()
+        }
+    }
+
+    private fun saveGoogleUserDataToFirestore(uid: String, displayName: String, email: String) {
+        // Split display name into first and last name
+        val nameParts = displayName.split(" ")
+        val firstName = nameParts.firstOrNull() ?: "User"
+        val lastName = nameParts.drop(1).joinToString(" ") ?: ""
+        
+        // Generate username from email
+        val username = email.substringBefore("@")
+        
+        val userData = hashMapOf(
+            "uid" to uid,
+            "name" to firstName,
+            "surname" to lastName,
+            "username" to username,
+            "email" to email,
+            "createdAt" to Date(),
+            "isActive" to true,
+            "signUpMethod" to "google"
+        )
+        
+        Log.d(TAG, "Saving Google user data to Firestore for UID: $uid")
+        
+        firestore.collection("users")
+            .document(uid)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "Google user data saved successfully to Firestore")
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Failed to save Google user data to Firestore", exception)
+            }
+    }
+
+    // Placeholder methods for GitHub and Facebook sign-up
+    private fun handleGitHubSignUp() {
+        Toast.makeText(this, "GitHub Sign-Up coming soon!", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "GitHub Sign-Up button clicked - functionality not implemented yet")
+    }
+    
+    private fun handleFacebookSignUp() {
+        Toast.makeText(this, "Facebook Sign-Up coming soon!", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "Facebook Sign-Up button clicked - functionality not implemented yet")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         // Remove any pending callbacks to prevent memory leaks
