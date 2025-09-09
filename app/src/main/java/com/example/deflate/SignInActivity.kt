@@ -21,12 +21,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FacebookAuthProvider
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import android.net.Uri
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.app.AlertDialog
 
 class SignInActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "SignInActivity"
         private const val RC_SIGN_IN = 9001
+        private const val GITHUB_CLIENT_ID = "Ov23liwG3uaDjiDZJnR4"
+        private const val GITHUB_REDIRECT_URI = "http://localhost:8080/github-callback"
     }
 
     private lateinit var usernameEditText: EditText
@@ -34,9 +46,12 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var signinButton: MaterialButton
     private lateinit var signupLink: TextView
     private lateinit var googleSignInButton: MaterialButton
+    private lateinit var githubSignInButton: MaterialButton
+    private lateinit var facebookSignInButton: MaterialButton
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,16 +69,23 @@ class SignInActivity : AppCompatActivity() {
 
         // Configure Google Sign-In
         configureGoogleSignIn()
+        
+        // Initialize Facebook
+        initializeFacebook()
 
         // Initialize views
         usernameEditText = findViewById(R.id.username_edittext)
         passwordEditText = findViewById(R.id.password_edittext)
         signinButton = findViewById(R.id.login_button)
         googleSignInButton = findViewById(R.id.google_signin_button)
+        githubSignInButton = findViewById(R.id.github_signin_button)
+        facebookSignInButton = findViewById(R.id.facebook_signin_button)
 
         // Click listeners
         signinButton.setOnClickListener { handleSignIn() }
         googleSignInButton.setOnClickListener { signInWithGoogle() }
+        githubSignInButton.setOnClickListener { signInWithGitHub() }
+        facebookSignInButton.setOnClickListener { signInWithFacebook() }
     }
 
     private fun handleSignIn() {
@@ -166,6 +188,9 @@ class SignInActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Handle Facebook callback
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -203,5 +228,113 @@ class SignInActivity : AppCompatActivity() {
             Toast.makeText(this, "Welcome $displayName!", Toast.LENGTH_LONG).show()
             navigateToHome()
         }
+    }
+
+    // Facebook Sign-In methods
+    private fun initializeFacebook() {
+        callbackManager = CallbackManager.Factory.create()
+        
+        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                Log.d(TAG, "Facebook login successful")
+                handleFacebookAccessToken(loginResult.accessToken.token)
+            }
+
+            override fun onCancel() {
+                Log.d(TAG, "Facebook login cancelled")
+                Toast.makeText(this@SignInActivity, "Facebook login cancelled", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onError(exception: FacebookException) {
+                Log.e(TAG, "Facebook login failed", exception)
+                Toast.makeText(this@SignInActivity, "Facebook login failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun signInWithFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
+    }
+
+    private fun handleFacebookAccessToken(token: String) {
+        val credential = FacebookAuthProvider.getCredential(token)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Facebook authentication successful")
+                    val user = auth.currentUser
+                    handleFacebookSignInSuccess(user)
+                } else {
+                    Log.e(TAG, "Facebook authentication failed", task.exception)
+                    Toast.makeText(this, "Facebook authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun handleFacebookSignInSuccess(user: com.google.firebase.auth.FirebaseUser?) {
+        user?.let {
+            val displayName = it.displayName ?: "User"
+            Toast.makeText(this, "Welcome $displayName!", Toast.LENGTH_LONG).show()
+            navigateToHome()
+        }
+    }
+
+    // GitHub Sign-In methods
+    private fun signInWithGitHub() {
+        if (GITHUB_CLIENT_ID == "YOUR_GITHUB_CLIENT_ID") {
+            Toast.makeText(this, "GitHub Client ID not configured. Please add your GitHub Client ID to the code.", Toast.LENGTH_LONG).show()
+            Log.e(TAG, "GitHub Client ID not configured")
+            return
+        }
+        
+        showGitHubLoginDialog()
+    }
+
+    private fun showGitHubLoginDialog() {
+        val webView = WebView(this)
+        webView.settings.javaScriptEnabled = true
+        
+        val githubAuthUrl = "https://github.com/login/oauth/authorize?client_id=$GITHUB_CLIENT_ID&redirect_uri=$GITHUB_REDIRECT_URI&scope=user:email"
+        
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url?.startsWith(GITHUB_REDIRECT_URI) == true) {
+                    val uri = Uri.parse(url)
+                    val code = uri.getQueryParameter("code")
+                    if (code != null) {
+                        handleGitHubCallback(code)
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        
+        webView.loadUrl(githubAuthUrl)
+        
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Sign in with GitHub")
+            .setView(webView)
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                Toast.makeText(this, "GitHub login cancelled", Toast.LENGTH_SHORT).show()
+            }
+            .create()
+        
+        dialog.show()
+    }
+
+    private fun handleGitHubCallback(code: String) {
+        Log.d(TAG, "GitHub authorization code received: $code")
+        
+        // For sign-in, we'll try to find existing GitHub users
+        // In a real implementation, you'd exchange the code for an access token
+        // and then check if the user exists in your system
+        
+        Toast.makeText(this, "GitHub Sign-In: Code received. Check logs for details.", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "GitHub sign-in code: $code")
+        
+        // For now, just show a message - in production you'd implement proper OAuth flow
+        Toast.makeText(this, "GitHub Sign-In functionality needs backend implementation", Toast.LENGTH_LONG).show()
     }
 }

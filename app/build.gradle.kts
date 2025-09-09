@@ -53,4 +53,12 @@ dependencies {
     
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    
+    // Facebook Sign-In
+    implementation("com.facebook.android:facebook-android-sdk:16.2.0")
+    
+    // GitHub Sign-In (using OAuth)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

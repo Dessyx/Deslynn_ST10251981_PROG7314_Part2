@@ -23,6 +23,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FacebookAuthProvider
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import android.net.Uri
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.app.AlertDialog
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
@@ -30,6 +42,8 @@ class SignUpActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "SignUpActivity"
         private const val RC_SIGN_IN = 9001
+        private const val GITHUB_CLIENT_ID = "Ov23liwG3uaDjiDZJnR4"
+        private const val GITHUB_REDIRECT_URI = "http://localhost:8080/github-callback"
     }
     
     private lateinit var nameEditText: EditText
@@ -47,6 +61,9 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var googleSignInClient: GoogleSignInClient
     
+    // Facebook instances
+    private lateinit var callbackManager: CallbackManager
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,6 +79,9 @@ class SignUpActivity : AppCompatActivity() {
         
         // Configure Google Sign-In
         configureGoogleSignIn()
+        
+        // Initialize Facebook
+        initializeFacebook()
         
         // Initialize views
         initializeViews()
@@ -386,6 +406,9 @@ registerUserWithFirebase(name, surname, username, password)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Handle Facebook callback
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -465,13 +488,196 @@ registerUserWithFirebase(name, surname, username, password)
 
     // Placeholder methods for GitHub and Facebook sign-up
     private fun handleGitHubSignUp() {
-        Toast.makeText(this, "GitHub Sign-Up coming soon!", Toast.LENGTH_SHORT).show()
-        Log.d(TAG, "GitHub Sign-Up button clicked - functionality not implemented yet")
+        if (GITHUB_CLIENT_ID == "YOUR_GITHUB_CLIENT_ID") {
+            Toast.makeText(this, "GitHub Client ID not configured. Please add your GitHub Client ID to the code.", Toast.LENGTH_LONG).show()
+            Log.e(TAG, "GitHub Client ID not configured")
+            return
+        }
+        
+        showGitHubLoginDialog()
+    }
+
+    private fun showGitHubLoginDialog() {
+        val webView = WebView(this)
+        webView.settings.javaScriptEnabled = true
+        
+        val githubAuthUrl = "https://github.com/login/oauth/authorize?client_id=$GITHUB_CLIENT_ID&redirect_uri=$GITHUB_REDIRECT_URI&scope=user:email"
+        
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url?.startsWith(GITHUB_REDIRECT_URI) == true) {
+                    val uri = Uri.parse(url)
+                    val code = uri.getQueryParameter("code")
+                    if (code != null) {
+                        handleGitHubCallback(code)
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        
+        webView.loadUrl(githubAuthUrl)
+        
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Sign in with GitHub")
+            .setView(webView)
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                Toast.makeText(this, "GitHub login cancelled", Toast.LENGTH_SHORT).show()
+            }
+            .create()
+        
+        dialog.show()
+    }
+
+    private fun handleGitHubCallback(code: String) {
+        // For now, we'll create a custom token for GitHub users
+        // In a real implementation, you'd exchange the code for an access token
+        // and then create a custom Firebase token
+        
+        Log.d(TAG, "GitHub authorization code received: $code")
+        
+        // Create a custom user for GitHub (this is a simplified approach)
+        // In production, you'd want to implement proper OAuth token exchange
+        val githubEmail = "github_user_${System.currentTimeMillis()}@github.com"
+        val githubPassword = "github_temp_password_${System.currentTimeMillis()}"
+        
+        auth.createUserWithEmailAndPassword(githubEmail, githubPassword)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    handleGitHubSignUpSuccess(user, code)
+                } else {
+                    Log.e(TAG, "GitHub user creation failed", task.exception)
+                    Toast.makeText(this, "GitHub authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun handleGitHubSignUpSuccess(user: com.google.firebase.auth.FirebaseUser?, githubCode: String) {
+        user?.let {
+            val displayName = "GitHub User"
+            val email = it.email ?: ""
+            
+            // Save user data to Firestore
+            saveGitHubUserDataToFirestore(it.uid, displayName, email, githubCode)
+            
+            Toast.makeText(this, "Welcome GitHub User!", Toast.LENGTH_LONG).show()
+            navigateToHome()
+        }
+    }
+
+    private fun saveGitHubUserDataToFirestore(uid: String, displayName: String, email: String, githubCode: String) {
+        val userData = hashMapOf(
+            "uid" to uid,
+            "name" to "GitHub",
+            "surname" to "User",
+            "username" to "github_user_${System.currentTimeMillis()}",
+            "email" to email,
+            "createdAt" to Date(),
+            "isActive" to true,
+            "signUpMethod" to "github",
+            "githubCode" to githubCode
+        )
+        
+        Log.d(TAG, "Saving GitHub user data to Firestore for UID: $uid")
+        
+        firestore.collection("users")
+            .document(uid)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "GitHub user data saved successfully to Firestore")
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Failed to save GitHub user data to Firestore", exception)
+            }
     }
     
+    private fun initializeFacebook() {
+        callbackManager = CallbackManager.Factory.create()
+        
+        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                Log.d(TAG, "Facebook login successful")
+                handleFacebookAccessToken(loginResult.accessToken.token)
+            }
+
+            override fun onCancel() {
+                Log.d(TAG, "Facebook login cancelled")
+                Toast.makeText(this@SignUpActivity, "Facebook login cancelled", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onError(exception: FacebookException) {
+                Log.e(TAG, "Facebook login failed", exception)
+                Toast.makeText(this@SignUpActivity, "Facebook login failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun handleFacebookSignUp() {
-        Toast.makeText(this, "Facebook Sign-Up coming soon!", Toast.LENGTH_SHORT).show()
-        Log.d(TAG, "Facebook Sign-Up button clicked - functionality not implemented yet")
+        LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
+    }
+
+    private fun handleFacebookAccessToken(token: String) {
+        val credential = FacebookAuthProvider.getCredential(token)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Facebook authentication successful")
+                    val user = auth.currentUser
+                    handleFacebookSignUpSuccess(user)
+                } else {
+                    Log.e(TAG, "Facebook authentication failed", task.exception)
+                    Toast.makeText(this, "Facebook authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun handleFacebookSignUpSuccess(user: com.google.firebase.auth.FirebaseUser?) {
+        user?.let {
+            val displayName = it.displayName ?: "User"
+            val email = it.email ?: ""
+            
+            // Save user data to Firestore
+            saveFacebookUserDataToFirestore(it.uid, displayName, email)
+            
+            Toast.makeText(this, "Welcome $displayName!", Toast.LENGTH_LONG).show()
+            navigateToHome()
+        }
+    }
+
+    private fun saveFacebookUserDataToFirestore(uid: String, displayName: String, email: String) {
+        // Split display name into first and last name
+        val nameParts = displayName.split(" ")
+        val firstName = nameParts.firstOrNull() ?: "User"
+        val lastName = nameParts.drop(1).joinToString(" ") ?: ""
+        
+        // Generate username from email
+        val username = email.substringBefore("@")
+        
+        val userData = hashMapOf(
+            "uid" to uid,
+            "name" to firstName,
+            "surname" to lastName,
+            "username" to username,
+            "email" to email,
+            "createdAt" to Date(),
+            "isActive" to true,
+            "signUpMethod" to "facebook"
+        )
+        
+        Log.d(TAG, "Saving Facebook user data to Firestore for UID: $uid")
+        
+        firestore.collection("users")
+            .document(uid)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "Facebook user data saved successfully to Firestore")
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Failed to save Facebook user data to Firestore", exception)
+            }
     }
 
     override fun onDestroy() {

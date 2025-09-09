@@ -2,4 +2,8 @@
     <string name="app_name">Deflate</string>
     <!-- TODO: Replace with your actual web client ID from google-services.json -->
     <string name="default_web_client_id">592716643926-jhrpi5snhessl4nusunupon7491a10hv.apps.googleusercontent.com</string>
+    <!-- TODO: Replace with your Facebook App ID -->
+    <string name="facebook_app_id">794482809744386</string>
+    <!-- TODO: Replace with your Facebook Client Token -->
+    <string name="facebook_client_token">4f1227f5dce3a4f97ae706a60efbdbc0</string>
 </resources>
