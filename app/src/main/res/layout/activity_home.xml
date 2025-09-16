@@ -107,7 +107,7 @@
                     android:layout_height="80dp"
                     android:contentDescription="Anxious"
                     app:backgroundTint="@color/purple"
-                    app:cornerRadius="40dp"
+                    app:cornerRadius="50dp"
                     app:icon="@drawable/mood_anxious"
                     app:iconTint="@android:color/black" />
 
