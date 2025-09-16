@@ -10,6 +10,8 @@
     <color name="orange">#FFE1D7</color>
     <color name="light_blue">#A6C7EA</color>
     <color name="bg">#F8E1FD</color>
+    <color name="pink">#FD8E92</color>
+    <color name ="bright_purple">#9333EA</color>
 
 
 </resources>

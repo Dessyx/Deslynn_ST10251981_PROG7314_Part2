@@ -71,7 +71,14 @@ class HomeActivity : AppCompatActivity() {
         val btnDiary = findViewById<Button>(R.id.btnDiary)
         btnDiary.setOnClickListener {
             startActivity(Intent(this, DiaryActivity::class.java))
+
         }
+        // Activities button
+        val btnSteps = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSteps)
+        btnSteps.setOnClickListener {
+            startActivity(Intent(this, ActivitiesActivity::class.java))
+        }
+
         // Bottom navigation
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
