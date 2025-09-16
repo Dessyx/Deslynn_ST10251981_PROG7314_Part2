@@ -34,8 +34,12 @@ class SettingsActivity : AppCompatActivity() {
         val user = auth.currentUser
         tvUserName.text = user?.displayName ?: user?.email ?: "User"
 
-        // Go back
-        btnBack.setOnClickListener { finish() }
+        // Go back to home
+        btnBack.setOnClickListener { 
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // Save new details
         btnSave.setOnClickListener {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -48,6 +49,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var googleSignInButton: MaterialButton
     private lateinit var githubSignInButton: MaterialButton
     private lateinit var facebookSignInButton: MaterialButton
+    private lateinit var btnBack: ImageView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -80,12 +82,14 @@ class SignInActivity : AppCompatActivity() {
         googleSignInButton = findViewById(R.id.google_signin_button)
         githubSignInButton = findViewById(R.id.github_signin_button)
         facebookSignInButton = findViewById(R.id.facebook_signin_button)
+        btnBack = findViewById(R.id.btnBack)
 
         // Click listeners
         signinButton.setOnClickListener { handleSignIn() }
         googleSignInButton.setOnClickListener { signInWithGoogle() }
         githubSignInButton.setOnClickListener { signInWithGitHub() }
         facebookSignInButton.setOnClickListener { signInWithFacebook() }
+        btnBack.setOnClickListener { navigateToSignUp() }
     }
 
     private fun handleSignIn() {
