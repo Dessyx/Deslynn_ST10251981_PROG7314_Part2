@@ -123,22 +123,23 @@
             android:textSize="16sp" />
 
         <!-- Register Button -->
+        <!-- Divider -->
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_button"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="7dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/btn_black_border"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:text="Register"
             android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/title_text"
-            app:layout_constraintVertical_chainStyle="packed" />
-        <!-- Divider -->
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -219,7 +220,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Click here to Login"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
