@@ -30,6 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvWelcome" />
 
+    <!-- Card 1: Mood Selector -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMood"
         android:layout_width="match_parent"
@@ -46,28 +47,20 @@
 
             <!-- Title -->
             <TextView
+                android:id="@+id/moodTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="How are you feeling today?"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Deflate in Diary button -->
-            <Button
-                android:id="@+id/btnDiary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="+ Deflate in Diary"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
             <!-- Mood Buttons Grid -->
             <GridLayout
                 android:id="@+id/gridMoods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btnDiary"
+                android:layout_below="@id/moodTitle"
+                android:layout_toStartOf="@id/btnDiary"
                 android:layout_marginTop="16dp"
                 android:alignmentMode="alignMargins"
                 android:columnCount="3"
@@ -87,7 +80,7 @@
                     app:icon="@drawable/mood_happy"
                     app:iconTint="@android:color/black" />
 
-                <!-- SAD-->
+                <!-- Sad -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodSad"
                     style="?attr/materialButtonOutlinedStyle"
@@ -135,8 +128,7 @@
                     app:icon="@drawable/mood_excited"
                     app:iconTint="@android:color/black" />
 
-                <!-- Content
-                 -->
+                <!-- Content -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodContent"
                     style="?attr/materialButtonOutlinedStyle"
@@ -148,9 +140,21 @@
                     app:icon="@drawable/mood_content"
                     app:iconTint="@android:color/black" />
             </GridLayout>
+
+            <!-- Deflate in Diary button (moved next to moods) -->
+            <Button
+                android:id="@+id/btnDiary"
+                android:layout_width="102dp"
+                android:layout_height="66dp"
+                android:layout_alignTop="@id/gridMoods"
+                android:layout_alignBottom="@id/gridMoods"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="@color/white"
+                android:text="+        Deflate in Diary"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
 
     <!-- Card 2: Today’s Mood + Activities -->
     <androidx.cardview.widget.CardView
@@ -172,7 +176,7 @@
             <!-- Today’s Mood -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="109dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -251,8 +255,6 @@
                 android:layout_below="@id/DailyInspo"
                 android:layout_marginTop="10dp"
                 android:text="“The only way to do great work is to love what you do.”\n- Steve Jobs" />
-
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -270,9 +272,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bright_purple"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="@drawable/streak_gradient">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -311,7 +313,9 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ECE4FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
