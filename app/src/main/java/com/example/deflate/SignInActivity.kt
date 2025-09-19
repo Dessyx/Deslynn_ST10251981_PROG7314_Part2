@@ -176,35 +176,78 @@ class SignInActivity : AppCompatActivity() {
 
     private fun configureGoogleSignIn() {
         // Configure Google Sign-In
+        val webClientId = getString(R.string.default_web_client_id)
+        Log.d(TAG, "Using web client ID: $webClientId")
+        
+        // Verify the client ID format
+        if (webClientId.contains("googleusercontent.com")) {
+            Log.d(TAG, "Web client ID format looks correct")
+        } else {
+            Log.e(TAG, "Web client ID format may be incorrect: $webClientId")
+        }
+        
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(webClientId)
             .requestEmail()
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+        Log.d(TAG, "Google Sign-In client configured successfully")
+        
+        // Check if Google Play Services is available
+        try {
+            val resultCode = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+            if (resultCode == com.google.android.gms.common.ConnectionResult.SUCCESS) {
+                Log.d(TAG, "Google Play Services is available")
+            } else {
+                Log.e(TAG, "Google Play Services not available. Result code: $resultCode")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking Google Play Services", e)
+        }
     }
 
     private fun signInWithGoogle() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        try {
+            Log.d(TAG, "Starting Google Sign-In process")
+            val signInIntent = googleSignInClient.signInIntent
+            Log.d(TAG, "Google Sign-In intent created successfully")
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error starting Google Sign-In", e)
+            Toast.makeText(this, "Error starting Google Sign-In: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        
+        Log.d(TAG, "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
 
         // Handle Facebook callback
         callbackManager.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "Processing Google Sign-In result")
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign-In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
+                Log.d(TAG, "Google Sign-In successful for user: ${account.email}")
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign-In failed
-                Log.w(TAG, "Google sign in failed", e)
-                Toast.makeText(this, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.w(TAG, "Google sign in failed with status code: ${e.statusCode}", e)
+                Log.w(TAG, "Error message: ${e.message}")
+                Log.w(TAG, "Error details: ${e.toString()}")
+                val errorMessage = when (e.statusCode) {
+                    7 -> "Network error. Please check your internet connection."
+                    8 -> "Internal error. Please try again later."
+                    10 -> "Developer error. OAuth consent screen may not be properly configured."
+                    12501 -> "Sign-in was cancelled."
+                    else -> "Google Sign-In failed: ${e.message} (Status: ${e.statusCode})"
+                }
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -221,7 +264,12 @@ class SignInActivity : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    val errorMessage = when {
+                        task.exception?.message?.contains("network") == true -> "Network error. Please check your internet connection."
+                        task.exception?.message?.contains("invalid") == true -> "Invalid credentials. Please try again."
+                        else -> "Authentication failed. Please try again."
+                    }
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
     }
@@ -251,7 +299,12 @@ class SignInActivity : AppCompatActivity() {
 
             override fun onError(exception: FacebookException) {
                 Log.e(TAG, "Facebook login failed", exception)
-                Toast.makeText(this@SignInActivity, "Facebook login failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                val errorMessage = when {
+                    exception.message?.contains("network") == true -> "Network error. Please check your internet connection."
+                    exception.message?.contains("cancelled") == true -> "Facebook login was cancelled."
+                    else -> "Facebook login failed. Please try again."
+                }
+                Toast.makeText(this@SignInActivity, errorMessage, Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -270,7 +323,12 @@ class SignInActivity : AppCompatActivity() {
                     handleFacebookSignInSuccess(user)
                 } else {
                     Log.e(TAG, "Facebook authentication failed", task.exception)
-                    Toast.makeText(this, "Facebook authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    val errorMessage = when {
+                        task.exception?.message?.contains("network") == true -> "Network error. Please check your internet connection."
+                        task.exception?.message?.contains("invalid") == true -> "Invalid Facebook credentials. Please try again."
+                        else -> "Facebook authentication failed. Please try again."
+                    }
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
     }
