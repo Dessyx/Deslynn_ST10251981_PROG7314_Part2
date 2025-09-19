@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -35,7 +36,7 @@ class SettingsActivity : AppCompatActivity() {
         tvUserName.text = user?.displayName ?: user?.email ?: "User"
 
         // Go back to home
-        btnBack.setOnClickListener { 
+        btnBack.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
@@ -65,7 +66,38 @@ class SettingsActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Failed: ${task.exception?.message}", Toast.LENGTH_LONG)
+                        .show()
+                    //  Bottom navigation
+                    val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                    bottomNav.selectedItemId = R.id.nav_settings // highlight settings tab
+
+                    bottomNav.setOnItemSelectedListener { item ->
+                        when (item.itemId) {
+                            R.id.nav_today -> {
+                                startActivity(Intent(this, HomeActivity::class.java))
+                                true
+                            }
+
+                            R.id.nav_diary -> {
+                                startActivity(Intent(this, DiaryActivity::class.java))
+                                true
+                            }
+
+                            R.id.nav_calendar -> {
+                                startActivity(Intent(this, CalendarActivity::class.java))
+                                true
+                            }
+
+                            R.id.nav_insights -> {
+                                startActivity(Intent(this, InsightsActivity::class.java))
+                                true
+                            }
+
+                            R.id.nav_settings -> true
+                            else -> false
+                        }
+                    }
                 }
             }
         }
