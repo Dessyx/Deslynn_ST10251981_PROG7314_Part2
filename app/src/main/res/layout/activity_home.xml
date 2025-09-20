@@ -72,8 +72,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodHappy"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Happy"
                     app:backgroundTint="@color/yellow"
                     app:cornerRadius="40dp"
@@ -84,8 +84,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodSad"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Sad"
                     app:backgroundTint="@color/blue"
                     app:cornerRadius="40dp"
@@ -96,8 +96,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodAnxious"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Anxious"
                     app:backgroundTint="@color/purple"
                     app:cornerRadius="50dp"
@@ -108,8 +108,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodTired"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Tired"
                     app:backgroundTint="@color/green"
                     app:cornerRadius="40dp"
@@ -120,8 +120,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodExcited"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Excited"
                     app:backgroundTint="@color/red"
                     app:cornerRadius="40dp"
@@ -132,8 +132,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMoodContent"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="Content"
                     app:backgroundTint="@color/orange"
                     app:cornerRadius="40dp"
@@ -149,6 +149,9 @@
                 android:layout_alignTop="@id/gridMoods"
                 android:layout_alignBottom="@id/gridMoods"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="0dp"
                 android:backgroundTint="@color/white"
                 android:text="+        Deflate in Diary"
                 android:textColor="@android:color/black"
@@ -214,14 +217,17 @@
                     android:id="@+id/btnSteps"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:text="👣"
+                    app:icon="@drawable/ic_steps"
+                    app:iconTint="@android:color/black"
                     app:backgroundTint="@color/light_blue"
                     app:cornerRadius="35dp" />
 
                 <TextView
+                    android:id="@+id/tvStepsHome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="7500 steps" />
+
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
