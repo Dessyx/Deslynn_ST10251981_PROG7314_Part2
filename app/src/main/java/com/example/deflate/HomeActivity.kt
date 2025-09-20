@@ -87,7 +87,7 @@ class HomeActivity : AppCompatActivity() {
                 btn.icon = null
                 btn.text = ""
                 btn.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(this, android.R.color.darker_gray)
+                    ContextCompat.getColor(this, android.R.color.white)
                 )
             }
         }
@@ -112,7 +112,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+
             insets
         }
         
@@ -182,7 +183,7 @@ class HomeActivity : AppCompatActivity() {
     private fun setMood(mood: String) {
         todayMood = mood
 
-        // ★ Update “Today’s mood” circle & save for today
+
         applyTodayMood(mood, save = true)
 
         Toast.makeText(this, "Fetching quotes for $mood...", Toast.LENGTH_SHORT).show()
