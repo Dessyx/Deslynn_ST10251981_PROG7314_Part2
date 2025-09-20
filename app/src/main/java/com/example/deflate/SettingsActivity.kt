@@ -10,6 +10,8 @@ import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.EmailAuthProvider
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -31,27 +33,72 @@ class SettingsActivity : AppCompatActivity() {
         val btnSave: Button = findViewById(R.id.btnSave)
         val btnDeleteAccount: Button = findViewById(R.id.btnDeleteAccount)
 
-        // Show logged-in user name or email
+
+// Show logged-in user name or email
         val user = auth.currentUser
-        tvUserName.text = user?.displayName ?: user?.email ?: "User"
+
+        val currentName = user?.displayName ?: user?.email?.substringBefore("@") ?: "User"
+
+        tvUserName.text = currentName
+        etName.setText(currentName)
 
         // Go back to home
         btnBack.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
             finish()
         }
 
+
         // Save new details
         btnSave.setOnClickListener {
-            val newName = etName.text.toString()
-            val newPass = etPassword.text.toString()
+            val newName = etName.text.toString().trim()
+            val newPass = etPassword.text.toString().trim()
+            val user = auth.currentUser
 
-            if (newName.isNotEmpty()) {
-                tvUserName.text = newName
+            if (user != null) {
+                // Update display name
+                if (newName.isNotEmpty()) {
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(newName)
+                        .build()
+
+                    user.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            tvUserName.text = newName
+                            Toast.makeText(this, "Name updated!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Failed to update name: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                //  Update password with reauthentication
+                if (newPass.isNotEmpty() && user.email != null) {
+                    val prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
+                    val currentPass = prefs.getString("USER_PASS", null)
+
+                    if (currentPass != null) {
+                        val credential = EmailAuthProvider.getCredential(user.email!!, currentPass)
+
+                        user.reauthenticate(credential).addOnCompleteListener { authTask ->
+                            if (authTask.isSuccessful) {
+                                user.updatePassword(newPass).addOnCompleteListener { passTask ->
+                                    if (passTask.isSuccessful) {
+                                        // Save new password locally
+                                        prefs.edit().putString("USER_PASS", newPass).apply()
+                                        Toast.makeText(this, "Password updated!", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(this, "Failed to update password: ${passTask.exception?.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(this, "Re-authentication failed: ${authTask.exception?.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "No stored password found. Please log in again.", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
-
-            Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
         }
 
         // Delete account
@@ -59,46 +106,40 @@ class SettingsActivity : AppCompatActivity() {
             user?.delete()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Account deleted", Toast.LENGTH_LONG).show()
-
-                    // Redirect to login screen
                     val intent = Intent(this, SignInActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Failed: ${task.exception?.message}", Toast.LENGTH_LONG)
-                        .show()
-                    //  Bottom navigation
-                    val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-                    bottomNav.selectedItemId = R.id.nav_settings // highlight settings tab
-
-                    bottomNav.setOnItemSelectedListener { item ->
-                        when (item.itemId) {
-                            R.id.nav_today -> {
-                                startActivity(Intent(this, HomeActivity::class.java))
-                                true
-                            }
-
-                            R.id.nav_diary -> {
-                                startActivity(Intent(this, DiaryActivity::class.java))
-                                true
-                            }
-
-                            R.id.nav_calendar -> {
-                                startActivity(Intent(this, CalendarActivity::class.java))
-                                true
-                            }
-
-                            R.id.nav_insights -> {
-                                startActivity(Intent(this, InsightsActivity::class.java))
-                                true
-                            }
-
-                            R.id.nav_settings -> true
-                            else -> false
-                        }
-                    }
+                    Toast.makeText(this, "Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+
+        //  Bottom navigation
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.selectedItemId = R.id.nav_settings
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_today -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.nav_diary -> {
+                    startActivity(Intent(this, DiaryActivity::class.java))
+                    true
+                }
+                R.id.nav_calendar -> {
+                    startActivity(Intent(this, CalendarActivity::class.java))
+                    true
+                }
+                R.id.nav_insights -> {
+                    startActivity(Intent(this, InsightsActivity::class.java))
+                    true
+                }
+                R.id.nav_settings -> true
+                else -> false
             }
         }
     }

@@ -100,17 +100,19 @@
         <!-- Login Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/login_button"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="7dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/btn_black_border"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:text="Login"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
 
         <!-- Divider -->
         <TextView

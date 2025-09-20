@@ -44,8 +44,9 @@ class HomeActivity : AppCompatActivity() {
 
         // Get the logged in Firebase user
         val currentUser = auth.currentUser
-        val email = currentUser?.email
-        val username = email?.substringBefore("@") ?: "User"
+        val updatedName = intent.getStringExtra("UPDATED_NAME")
+        val username = updatedName ?: currentUser?.displayName ?: currentUser?.email?.substringBefore("@") ?: "User"
+
         //  Welcome text
         val tvWelcome = findViewById<TextView>(R.id.tvWelcome)
         tvWelcome.text = "Welcome, $username"
