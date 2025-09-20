@@ -24,6 +24,7 @@ import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var prefs: android.content.SharedPreferences
     private var todayMood: String? = null
     private var currentTagIndex = 0
     private var currentMoodTags = listOf<String>()
@@ -37,8 +38,6 @@ class HomeActivity : AppCompatActivity() {
         "Content" to listOf("peace", "gratitude", "satisfaction", "harmony", "wisdom")
     )
 
-
-    private val prefs = getSharedPreferences("home_prefs", Context.MODE_PRIVATE)
     private val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private fun todayKey() = df.format(Date())
 
@@ -116,6 +115,9 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        
+   
+        prefs = getSharedPreferences("home_prefs", Context.MODE_PRIVATE)
         auth = FirebaseAuth.getInstance()
 
         // Get the logged in Firebase user
