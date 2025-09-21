@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -55,8 +58,11 @@ class SettingsActivity : AppCompatActivity() {
             val user = auth.currentUser
 
             if (user != null) {
-                // Update display name
-                if (newName.isNotEmpty()) {
+                val db = FirebaseFirestore.getInstance()
+                val userId = user.uid
+
+
+                if (newName.isNotEmpty() && newName != user.displayName) {
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName(newName)
                         .build()
@@ -65,82 +71,97 @@ class SettingsActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             tvUserName.text = newName
                             Toast.makeText(this, "Name updated!", Toast.LENGTH_SHORT).show()
+
+                            // Store updated name in Firestore
+                            val userMap = hashMapOf("name" to newName)
+                            db.collection("users").document(userId)
+                                .set(userMap, SetOptions.merge())
+                                .addOnSuccessListener {
+                                    // Successfully stored in Firestore
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, "Failed to store name: ${e.message}", Toast.LENGTH_LONG).show()
+                                }
+
                         } else {
-                            Toast.makeText(this, "Failed to update name: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this,
+                                "Failed to update name: ${task.exception?.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }
 
-                //  Update password with reauthentication
-                if (newPass.isNotEmpty() && user.email != null) {
-                    val prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                    val currentPass = prefs.getString("USER_PASS", null)
 
-                    if (currentPass != null) {
-                        val credential = EmailAuthProvider.getCredential(user.email!!, currentPass)
-
-                        user.reauthenticate(credential).addOnCompleteListener { authTask ->
-                            if (authTask.isSuccessful) {
-                                user.updatePassword(newPass).addOnCompleteListener { passTask ->
-                                    if (passTask.isSuccessful) {
-                                        // Save new password locally
-                                        prefs.edit().putString("USER_PASS", newPass).apply()
-                                        Toast.makeText(this, "Password updated!", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this, "Failed to update password: ${passTask.exception?.message}", Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(this, "Re-authentication failed: ${authTask.exception?.message}", Toast.LENGTH_LONG).show()
-                            }
+                if (newPass.isNotEmpty()) {
+                    user.updatePassword(newPass).addOnCompleteListener { passTask ->
+                        if (passTask.isSuccessful) {
+                            Toast.makeText(this, "Password updated!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Failed to update password: ${passTask.exception?.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
-                    } else {
-                        Toast.makeText(this, "No stored password found. Please log in again.", Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
+
 
         // Delete account
-        btnDeleteAccount.setOnClickListener {
-            user?.delete()?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Account deleted", Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, SignInActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                btnDeleteAccount.setOnClickListener {
+                    user?.delete()?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Account deleted", Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, SignInActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Failed: ${task.exception?.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+
+                //  Bottom navigation
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.selectedItemId = R.id.nav_settings
+
+                bottomNav.setOnItemSelectedListener { item ->
+                    when (item.itemId) {
+                        R.id.nav_today -> {
+                            startActivity(Intent(this, HomeActivity::class.java))
+                            true
+                        }
+
+                        R.id.nav_diary -> {
+                            startActivity(Intent(this, DiaryActivity::class.java))
+                            true
+                        }
+
+                        R.id.nav_calendar -> {
+                            startActivity(Intent(this, CalendarActivity::class.java))
+                            true
+                        }
+
+                        R.id.nav_insights -> {
+                            startActivity(Intent(this, InsightsActivity::class.java))
+                            true
+                        }
+
+                        R.id.nav_settings -> true
+                        else -> false
+                    }
                 }
             }
         }
 
-        //  Bottom navigation
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-        bottomNav.selectedItemId = R.id.nav_settings
 
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_today -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    true
-                }
-                R.id.nav_diary -> {
-                    startActivity(Intent(this, DiaryActivity::class.java))
-                    true
-                }
-                R.id.nav_calendar -> {
-                    startActivity(Intent(this, CalendarActivity::class.java))
-                    true
-                }
-                R.id.nav_insights -> {
-                    startActivity(Intent(this, InsightsActivity::class.java))
-                    true
-                }
-                R.id.nav_settings -> true
-                else -> false
-            }
-        }
-    }
-}

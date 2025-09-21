@@ -30,6 +30,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class SignInActivity : AppCompatActivity() {
 
@@ -104,47 +106,60 @@ class SignInActivity : AppCompatActivity() {
 
     //  Email/Password Authentication
     private fun handleSignIn() {
-        val username = usernameEditText.text.toString().trim()
+        val input = usernameEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
 
-        if (!validateInputs(username, password)) return
+        if (!validateInputs(input, password)) return
 
         signinButton.isEnabled = false
         signinButton.text = "Signing in..."
 
-        val email = "$username@deflate.com"
-        Log.d(TAG, "Attempting login with email: $email")
+        if (input.contains("@")) {
+            // User entered an email
+            signInWithEmail(input, password)
+        } else {
+            // User entered a username, look up email in Firestore
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .whereEqualTo("username", input)
+                .get()
+                .addOnSuccessListener { docs ->
+                    if (!docs.isEmpty) {
+                        val email = docs.documents[0].getString("email")
+                        if (!email.isNullOrEmpty()) {
+                            signInWithEmail(email, password)
+                        } else {
+                            showError("No email linked to this username")
+                        }
+                    } else {
+                        showError("Username not found")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    showError("Error: ${e.message}")
+                }
+        }
+    }
 
+    private fun signInWithEmail(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
+                signinButton.isEnabled = true
+                signinButton.text = "Sign In"
+
                 if (task.isSuccessful) {
-                    Log.d(TAG, "Sign in successful")
-
-                    //  Save password for re-authentication
-                    val prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                    prefs.edit().putString("USER_PASS", password).apply()
-
                     handleSignInSuccess()
                 } else {
-                    val exception = task.exception
-                    Log.e(TAG, "Sign in failed", exception)
-
-                    val errorMessage = when (exception) {
-                        is FirebaseAuthException -> {
-                            when (exception.errorCode) {
-                                "ERROR_INVALID_EMAIL" -> "Invalid username"
-                                "ERROR_WRONG_PASSWORD" -> "Incorrect password"
-                                "ERROR_USER_NOT_FOUND" -> "No account found with this username"
-                                "ERROR_NETWORK_REQUEST_FAILED" -> "Network error. Check your internet"
-                                else -> "Sign in failed: ${exception.message}"
-                            }
-                        }
-                        else -> "Sign in failed: ${exception?.message ?: "Unknown error"}"
-                    }
-
-                    handleSignInError(errorMessage)
+                    val error = (task.exception as? FirebaseAuthException)?.errorCode ?: "UNKNOWN"
+                    showError("Login failed: $error")
                 }
             }
+    }
+
+    private fun showError(msg: String) {
+        signinButton.isEnabled = true
+        signinButton.text = "Sign In"
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
     private fun validateInputs(username: String, password: String): Boolean {
