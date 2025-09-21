@@ -60,6 +60,9 @@ class SettingsActivity : AppCompatActivity() {
             if (user != null) {
                 val db = FirebaseFirestore.getInstance()
                 val userId = user.uid
+                val userMap = hashMapOf("username" to newName)
+                db.collection("users").document(userId)
+                    .set(userMap, SetOptions.merge())
 
 
                 if (newName.isNotEmpty() && newName != user.displayName) {
