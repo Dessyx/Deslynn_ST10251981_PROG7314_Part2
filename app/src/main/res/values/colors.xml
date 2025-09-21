@@ -12,6 +12,9 @@
     <color name="bg">#F8E1FD</color>
     <color name="pink">#FD8E92</color>
     <color name ="bright_purple">#9333EA</color>
+    <color name ="save">#F8E1FD</color>
+    <color name ="history">#A6C7EA</color>
+    <color name ="dear_diary">#FFC2C6</color>
 
 
 </resources>

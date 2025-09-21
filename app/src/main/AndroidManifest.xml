@@ -18,6 +18,9 @@
         <!-- Facebook App ID -->
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".MainActivity"
@@ -53,6 +56,9 @@
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HistoryActivity"
             android:exported="false" />
 
         <!-- Facebook Activity -->
