@@ -207,6 +207,7 @@ class SignInActivity : AppCompatActivity() {
     private fun configureGoogleSignIn() {
         val webClientId = getString(R.string.default_web_client_id)
         Log.d(TAG, "Using web client ID: $webClientId")
+        Log.d(TAG, "Package name: ${packageName}")
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(webClientId)
@@ -214,6 +215,7 @@ class SignInActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+        Log.d(TAG, "Google Sign-In client configured successfully")
     }
 
     private fun signInWithGoogle() {
@@ -231,7 +233,14 @@ class SignInActivity : AppCompatActivity() {
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Google Sign-In failed: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Google Sign-In failed: ${e.statusCode} - ${e.message}")
+                val errorMessage = when (e.statusCode) {
+                    10 -> "DEVELOPER_ERROR: Check SHA-1 fingerprint and OAuth configuration"
+                    7 -> "NETWORK_ERROR: Check internet connection"
+                    12501 -> "USER_CANCELLED: Sign-in was cancelled"
+                    else -> "Google Sign-In failed: ${e.statusCode} - ${e.message}"
+                }
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
     }

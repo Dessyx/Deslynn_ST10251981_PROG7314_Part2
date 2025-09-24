@@ -29,10 +29,17 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("keystore/release-key.jks")
-            storePassword = "Str0ngD3fl4t3Passw0rd"
-            keyAlias = "release"
-            keyPassword = "Str0ngD3fl4t3Passw0rd"
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            } else {
+                storeFile = file("keystore/release-key.jks")
+                storePassword = "Str0ngD3fl4t3Passw0rd"
+                keyAlias = "release"
+                keyPassword = "Str0ngD3fl4t3Passw0rd"
+            }
         }
     }
 
@@ -66,7 +73,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    
+    // Testing dependencies
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
+    
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
