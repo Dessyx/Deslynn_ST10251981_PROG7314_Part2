@@ -53,8 +53,7 @@ android {
             )
         }
         getByName("debug") {
-            // Use debug keystore for debug builds
-            // signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
