@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Deflate</string>
+    <!-- Web client ID from google-services.json -->
+    <string name="default_web_client_id">592716643926-lo7n1jogvbkdbr0ud8slj5eq4bca998q.apps.googleusercontent.com</string>
+    <!-- TODO: Replace with your Facebook App ID -->
+    <string name="facebook_app_id">794482809744386</string>
+    <!-- TODO: Replace with your Facebook Client Token -->
+    <string name="facebook_client_token">4f1227f5dce3a4f97ae706a60efbdbc0</string>
+    <!-- Facebook Login Protocol Scheme -->
+    <string name="fb_login_protocol_scheme">fb794482809744386</string>
+    
+    <!-- Activities Activity Strings -->
+    <string name="input_cleared">Inputs cleared</string>
+    <string name="please_enter_weight_or_steps">Please enter weight or steps</string>
+    <string name="please_sign_in_to_save_activities">Please sign in to save activities</string>
+    <string name="please_enter_valid_weight">Please enter a valid weight</string>
+    <string name="please_enter_valid_steps">Please enter a valid number of steps</string>
+    <string name="activities_saved_successfully">Activities saved successfully!</string>
+    <string name="failed_to_save_activities">Failed to save activities: %s</string>
+    <string name="please_sign_in_to_view_activities">Please sign in to view activities</string>
+    <string name="error_loading_weight_data">Error loading weight data</string>
+    <string name="error_loading_steps_data">Error loading steps data</string>
+    <string name="weight_format">%d kgs</string>
+    <string name="steps_format">%d steps</string>
+    <string name="weight_default">0 kgs</string>
+    <string name="steps_default">0 steps</string>
 </resources>

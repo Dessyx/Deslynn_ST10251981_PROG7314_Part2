@@ -21,8 +21,15 @@ class MainActivity : AppCompatActivity() {
 
         // Set up button click listener
         val letsBeginButton = findViewById<TextView>(R.id.lets_begin_button)
-        letsBeginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+        letsBeginButton?.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Login link click listener
+        val loginLink = findViewById<TextView>(R.id.login_link)
+        loginLink?.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
     }
