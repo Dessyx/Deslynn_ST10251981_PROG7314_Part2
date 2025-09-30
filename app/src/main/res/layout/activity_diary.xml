@@ -151,6 +151,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
                     android:orientation="vertical"
                     android:padding="14dp">
 
@@ -168,29 +170,29 @@
                             app:backgroundTint="@color/yellow"
                             app:cornerRadius="40dp"
                             app:icon="@drawable/mood_happy"
-                            app:iconTint="@android:color/black"
-                            app:iconPadding="0dp"/>
+                            app:iconPadding="0dp"
+                            app:iconTint="@android:color/black" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMoodSad"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
+                            android:layout_marginEnd="12dp"
                             android:text=""
-                            app:icon="@drawable/mood_sad"
-                            app:iconTint="@android:color/black"
-                            app:cornerRadius="40dp"
                             app:backgroundTint="@color/blue"
-                            android:layout_marginEnd="12dp"/>
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_sad"
+                            app:iconTint="@android:color/black" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMoodAnxious"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
                             android:text=""
-                            app:icon="@drawable/mood_anxious"
-                            app:iconTint="@android:color/black"
+                            app:backgroundTint="@color/purple"
                             app:cornerRadius="40dp"
-                            app:backgroundTint="@color/purple"/>
+                            app:icon="@drawable/mood_anxious"
+                            app:iconTint="@android:color/black" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -203,33 +205,34 @@
                             android:id="@+id/btnMoodTired"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
-                            app:icon="@drawable/mood_tired"
-                            app:iconTint="@android:color/black"
-                            app:cornerRadius="40dp"
+                            android:layout_marginEnd="12dp"
                             app:backgroundTint="@color/green"
-                            android:layout_marginEnd="12dp"/>
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_tired"
+                            app:iconTint="@android:color/black" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMoodExcited"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
+                            android:layout_marginEnd="12dp"
                             android:text=""
-                            app:icon="@drawable/mood_excited"
-                            app:iconTint="@android:color/black"
-                            app:cornerRadius="40dp"
                             app:backgroundTint="@color/red"
-                            android:layout_marginEnd="12dp"/>
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_excited"
+                            app:iconTint="@android:color/black" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMoodContent"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
                             android:text=""
-                            app:icon="@drawable/mood_content"
-                            app:iconTint="@android:color/black"
+                            app:backgroundTint="@color/orange"
                             app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_content"
                             app:iconPadding="0dp"
-                            app:backgroundTint="@color/orange"/>
+                            app:iconTint="@android:color/black"
+                            tools:ignore="SpeakableTextPresentCheck" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
