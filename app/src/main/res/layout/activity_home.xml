@@ -32,6 +32,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
                 android:text="Welcome, User"
+                android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -65,6 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="How are you feeling today?"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -72,8 +74,8 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnDiary"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
+                        android:layout_width="84dp"
+                        android:layout_height="52dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="3dp"
@@ -210,6 +212,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Today's mood"
+                            android:textColor="@color/black"
                             android:textStyle="bold" />
 
                         <com.google.android.material.button.MaterialButton
@@ -232,6 +235,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Activities"
+                            android:textColor="@color/black"
                             android:textStyle="bold" />
 
                         <com.google.android.material.button.MaterialButton
@@ -248,7 +252,8 @@
                             android:id="@+id/tvStepsHome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7500 steps" />
+                            android:text="7500 steps"
+                            android:textColor="@color/black" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -273,6 +278,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Daily Inspiration"
+                        android:textColor="@color/black"
                         android:textStyle="bold" />
 
                     <TextView
@@ -281,7 +287,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/DailyInspo"
                         android:layout_marginTop="10dp"
-                        android:text="“The only way to do great work is to love what you do.”&#10;- Steve Jobs" />
+                        android:text="“The only way to do great work is to love what you do.”&#10;- Steve Jobs"
+                        android:textColor="@color/black" />
+
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -305,6 +313,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🔥 5-day streak"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -312,6 +321,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Keep it going!"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <ProgressBar
@@ -329,6 +339,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:text="2 more days to reach 7-day streak!"
+                        android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
