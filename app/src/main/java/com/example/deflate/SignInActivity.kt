@@ -1,5 +1,6 @@
 package com.example.deflate
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -39,6 +40,7 @@ class SignInActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "SignInActivity"
         private const val RC_SIGN_IN = 9001
+        private const val RC_GITHUB_AUTH = 9002
         private const val GITHUB_CLIENT_ID = "Ov23liwG3uaDjiDZJnR4"
         private const val GITHUB_REDIRECT_URI = "http://localhost:8080/github-callback"
     }
@@ -242,6 +244,17 @@ class SignInActivity : AppCompatActivity() {
                 }
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
+        } else if (requestCode == RC_GITHUB_AUTH) {
+            if (resultCode == Activity.RESULT_OK) {
+                val authCode = data?.getStringExtra(GitHubAuthActivity.EXTRA_AUTH_CODE)
+                if (authCode != null) {
+                    handleGitHubCallback(authCode)
+                } else {
+                    Toast.makeText(this, "GitHub authentication failed", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "GitHub authentication cancelled", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -314,88 +327,11 @@ class SignInActivity : AppCompatActivity() {
             Toast.makeText(this, "GitHub Client ID not configured.", Toast.LENGTH_LONG).show()
             return
         }
-        showGitHubLoginDialog()
+        
+        val intent = Intent(this, GitHubAuthActivity::class.java)
+        startActivityForResult(intent, RC_GITHUB_AUTH)
     }
 
-    private fun showGitHubLoginDialog() {
-        val webView = WebView(this).apply { 
-            settings.apply {
-                javaScriptEnabled = true
-                domStorageEnabled = true
-                loadWithOverviewMode = true
-                useWideViewPort = true
-                builtInZoomControls = true
-                displayZoomControls = false
-                setSupportZoom(true)
-                setGeolocationEnabled(true)
-                allowFileAccess = true
-                allowContentAccess = true
-                mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                cacheMode = android.webkit.WebSettings.LOAD_DEFAULT
-                databaseEnabled = true
-                setSupportMultipleWindows(false)
-                userAgentString = userAgentString + " DeflateApp/1.0"
-            }
-            
-            // Enable focus and keyboard handling
-            isFocusable = true
-            isFocusableInTouchMode = true
-            requestFocus()
-            
-            // Enable hardware acceleration for better performance
-            setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
-        }
-        
-        val githubAuthUrl = "https://github.com/login/oauth/authorize" +
-                "?client_id=$GITHUB_CLIENT_ID&redirect_uri=$GITHUB_REDIRECT_URI&scope=user:email"
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if (url?.startsWith(GITHUB_REDIRECT_URI) == true) {
-                    val uri = Uri.parse(url)
-                    val code = uri.getQueryParameter("code")
-                    if (code != null) handleGitHubCallback(code)
-                    return true
-                }
-                return false
-            }
-            
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                // Enable JavaScript after page loads and ensure keyboard support
-                view?.evaluateJavascript("""
-                    document.body.style.zoom='1.0';
-                    // Enable input focus
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
-                        inputs.forEach(function(input) {
-                            input.addEventListener('focus', function() {
-                                this.click();
-                            });
-                        });
-                    });
-                """.trimIndent(), null)
-            }
-        }
-
-        webView.loadUrl(githubAuthUrl)
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Sign in with GitHub")
-            .setView(webView)
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-                Toast.makeText(this, "GitHub login cancelled", Toast.LENGTH_SHORT).show()
-            }
-            .create()
-        
-        dialog.show()
-        
-        // Ensure the WebView gets focus after dialog is shown
-        webView.post {
-            webView.requestFocus()
-        }
-    }
 
     private fun handleGitHubCallback(code: String) {
         Log.d(TAG, "GitHub code: $code")
