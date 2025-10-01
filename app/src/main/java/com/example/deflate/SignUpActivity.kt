@@ -513,25 +513,38 @@ registerUserWithFirebase(name, surname, username, password)
 
 
     private fun handleGitHubCallback(code: String) {
-        // For now, we'll create a custom token for GitHub users
+        Log.d(TAG, "GitHub authentication code received: $code")
+        
+        // Show loading state
+        Toast.makeText(this, "Authenticating with GitHub...", Toast.LENGTH_SHORT).show()
+        
+        // For now, we'll create a custom user session for GitHub users
         // In a real implementation, you'd exchange the code for an access token
         // and then create a custom Firebase token
         
-        Log.d(TAG, "GitHub authorization code received: $code")
-        
-        // Create a custom user for GitHub (this is a simplified approach)
-        // In production, you'd want to implement proper OAuth token exchange
         val githubEmail = "github_user_${System.currentTimeMillis()}@github.com"
         val githubPassword = "github_temp_password_${System.currentTimeMillis()}"
         
+        // Create a temporary user account for GitHub authentication
         auth.createUserWithEmailAndPassword(githubEmail, githubPassword)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    Log.d(TAG, "GitHub user session created successfully")
                     val user = auth.currentUser
                     handleGitHubSignUpSuccess(user, code)
                 } else {
-                    Log.e(TAG, "GitHub user creation failed", task.exception)
-                    Toast.makeText(this, "GitHub authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    // If user already exists, try to sign in
+                    auth.signInWithEmailAndPassword(githubEmail, githubPassword)
+                        .addOnCompleteListener(this) { signInTask ->
+                            if (signInTask.isSuccessful) {
+                                Log.d(TAG, "GitHub user signed in successfully")
+                                val user = auth.currentUser
+                                handleGitHubSignUpSuccess(user, code)
+                            } else {
+                                Log.e(TAG, "GitHub authentication failed", signInTask.exception)
+                                Toast.makeText(this, "GitHub authentication failed: ${signInTask.exception?.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
                 }
             }
     }
@@ -544,7 +557,7 @@ registerUserWithFirebase(name, surname, username, password)
             // Save user data to Firestore
             saveGitHubUserDataToFirestore(it.uid, displayName, email, githubCode)
             
-            Toast.makeText(this, "Welcome GitHub User!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Welcome! GitHub authentication successful", Toast.LENGTH_LONG).show()
             navigateToHome()
         }
     }
@@ -572,6 +585,7 @@ registerUserWithFirebase(name, surname, username, password)
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Failed to save GitHub user data to Firestore", exception)
+                // Continue anyway - user is authenticated even if data save fails
             }
     }
     

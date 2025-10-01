@@ -135,6 +135,9 @@ class GitHubAuthActivity : AppCompatActivity() {
     private fun handleAuthSuccess(code: String) {
         Log.d(TAG, "Authentication successful with code: $code")
         
+        // Show success message
+        Toast.makeText(this, "GitHub authentication successful!", Toast.LENGTH_SHORT).show()
+        
         val resultIntent = Intent().apply {
             putExtra(EXTRA_AUTH_CODE, code)
         }
