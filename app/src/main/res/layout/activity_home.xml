@@ -74,7 +74,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnDiary"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="84dp"
+                        android:layout_width="70dp"
                         android:layout_height="52dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
@@ -86,7 +86,7 @@
                         android:paddingEnd="12dp"
                         android:text="+ Deflate in Diary"
                         android:textColor="@android:color/black"
-                        android:textSize="12sp"
+                        android:textSize="8sp"
                         app:cornerRadius="20dp"
                         app:strokeColor="@android:color/black"
                         app:strokeWidth="1dp" />
