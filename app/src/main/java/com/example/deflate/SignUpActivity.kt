@@ -498,8 +498,33 @@ registerUserWithFirebase(name, surname, username, password)
     }
 
     private fun showGitHubLoginDialog() {
-        val webView = WebView(this)
-        webView.settings.javaScriptEnabled = true
+        val webView = WebView(this).apply { 
+            settings.apply {
+                javaScriptEnabled = true
+                domStorageEnabled = true
+                loadWithOverviewMode = true
+                useWideViewPort = true
+                builtInZoomControls = true
+                displayZoomControls = false
+                setSupportZoom(true)
+                setGeolocationEnabled(true)
+                allowFileAccess = true
+                allowContentAccess = true
+                mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                cacheMode = android.webkit.WebSettings.LOAD_DEFAULT
+                databaseEnabled = true
+                setSupportMultipleWindows(false)
+                userAgentString = userAgentString + " DeflateApp/1.0"
+            }
+            
+            // Enable focus and keyboard handling
+            isFocusable = true
+            isFocusableInTouchMode = true
+            requestFocus()
+            
+            // Enable hardware acceleration for better performance
+            setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
+        }
         
         val githubAuthUrl = "https://github.com/login/oauth/authorize?client_id=$GITHUB_CLIENT_ID&redirect_uri=$GITHUB_REDIRECT_URI&scope=user:email"
         
@@ -515,6 +540,23 @@ registerUserWithFirebase(name, surname, username, password)
                 }
                 return false
             }
+            
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                // Enable JavaScript after page loads and ensure keyboard support
+                view?.evaluateJavascript("""
+                    document.body.style.zoom='1.0';
+                    // Enable input focus
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+                        inputs.forEach(function(input) {
+                            input.addEventListener('focus', function() {
+                                this.click();
+                            });
+                        });
+                    });
+                """.trimIndent(), null)
+            }
         }
         
         webView.loadUrl(githubAuthUrl)
@@ -529,6 +571,11 @@ registerUserWithFirebase(name, surname, username, password)
             .create()
         
         dialog.show()
+        
+        // Ensure the WebView gets focus after dialog is shown
+        webView.post {
+            webView.requestFocus()
+        }
     }
 
     private fun handleGitHubCallback(code: String) {
