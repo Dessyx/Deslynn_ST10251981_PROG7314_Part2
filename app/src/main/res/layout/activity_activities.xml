@@ -62,6 +62,7 @@
             android:background="@drawable/edittext_background"
             android:hint="Enter your weight in kg"
             android:inputType="numberDecimal"
+            android:textColor="@color/black"
             android:paddingStart="16dp"
             android:paddingEnd="16dp" />
 
@@ -99,6 +100,7 @@
             android:background="@drawable/edittext_background"
             android:hint="Enter your steps achieved"
             android:inputType="number"
+            android:textColor="@color/black"
             android:paddingStart="16dp"
             android:paddingEnd="16dp" />
 
@@ -274,6 +276,7 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ECE4FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
         tools:layout_editor_absoluteX="0dp" />
