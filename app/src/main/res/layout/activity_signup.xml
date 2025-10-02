@@ -22,13 +22,14 @@
 
         <!-- Sign Up Title -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:text="Sign Up"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:gravity="center" />
 
         <!-- Name Field -->
         <TextView
@@ -138,6 +139,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:text="Or sign in with"
+            android:textColor="@color/black"
             android:textSize="14sp" />
 
         <!-- SSO buttons: Google, GitHub, Facebook -->
