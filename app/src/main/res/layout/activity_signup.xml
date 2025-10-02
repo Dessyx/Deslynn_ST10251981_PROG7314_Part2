@@ -136,7 +136,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="Or sign in with"
             android:textColor="@color/black"
