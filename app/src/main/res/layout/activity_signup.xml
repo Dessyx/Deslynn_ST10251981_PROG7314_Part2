@@ -122,7 +122,7 @@
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/btn_black_border"
             android:clickable="true"
             android:focusable="true"
@@ -136,7 +136,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="7dp"
             android:gravity="center"
             android:text="Or sign in with"
             android:textColor="@color/black"
