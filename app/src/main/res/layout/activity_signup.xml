@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="4dp"
             android:text="Sign Up"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -131,66 +131,6 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <!-- Divider -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:gravity="center"
-            android:text="Or sign in with"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
-
-        <!-- SSO buttons: Google, GitHub, Facebook -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <!-- Google Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/google_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/google_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-            <!-- GitHub Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/github_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/github_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-            <!-- Facebook Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/facebook_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/facebook_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-        </LinearLayout>
 
         <!-- Login Link -->
         <LinearLayout
