@@ -48,13 +48,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Input"
-            android:textColor="#999999"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Weight"
             android:textColor="@color/black"
@@ -69,6 +62,7 @@
             android:background="@drawable/edittext_background"
             android:hint="Enter your weight in kg"
             android:inputType="numberDecimal"
+            android:textColor="@color/black"
             android:paddingStart="16dp"
             android:paddingEnd="16dp" />
 
@@ -77,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Track your wellness."
-            android:textColor="#666666"
+            android:textColor="@color/black"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -88,13 +82,6 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/weightSection">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Input"
-            android:textColor="#999999"
-            android:textSize="12sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -113,6 +100,7 @@
             android:background="@drawable/edittext_background"
             android:hint="Enter your steps achieved"
             android:inputType="number"
+            android:textColor="@color/black"
             android:paddingStart="16dp"
             android:paddingEnd="16dp" />
 
@@ -121,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Keep moving and stay active!"
-            android:textColor="#666666"
+            android:textColor="@color/black"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -133,13 +121,6 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/stepsSection">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            android:textColor="#999999"
-            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -295,6 +276,7 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ECE4FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
         tools:layout_editor_absoluteX="0dp" />

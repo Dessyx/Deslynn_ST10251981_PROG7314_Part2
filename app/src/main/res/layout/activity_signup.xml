@@ -1,57 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/signup_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/signup_bg"
-    tools:context=".SignUpActivity">
+    android:background="@drawable/signup_bg">
 
     <!-- White card container -->
     <LinearLayout
         android:id="@+id/signup_card"
         android:layout_width="388dp"
-        android:layout_height="722dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.235"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.588">
+        android:padding="40dp">
 
         <!-- Sign Up Title -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="4dp"
             android:text="Sign Up"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:gravity="center" />
 
         <!-- Name Field -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:text="Name"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <!-- Surname Field -->
         <EditText
             android:id="@+id/name_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/edittext_background"
             android:gravity="center_vertical"
             android:hint="Enter your name"
@@ -59,10 +52,11 @@
             android:textColorHint="#80000000"
             android:textSize="16sp" />
 
+        <!-- Surname Field -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:text="Surname"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -71,7 +65,7 @@
             android:id="@+id/surname_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/edittext_background"
             android:gravity="center_vertical"
             android:hint="Enter your surname"
@@ -81,9 +75,9 @@
 
         <!-- Username Field -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:text="Username"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -92,7 +86,7 @@
             android:id="@+id/username_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/edittext_background"
             android:gravity="center_vertical"
             android:hint="Enter your username"
@@ -102,9 +96,9 @@
 
         <!-- Password Field -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:text="Password"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -113,7 +107,7 @@
             android:id="@+id/password_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
             android:gravity="center_vertical"
             android:hint="Enter your password"
@@ -123,14 +117,12 @@
             android:textSize="16sp" />
 
         <!-- Register Button -->
-        <!-- Divider -->
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_button"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/btn_black_border"
             android:clickable="true"
             android:focusable="true"
@@ -140,71 +132,12 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:text="Or sign in with"
-            android:textSize="14sp" />
-
-        <!-- SSO buttons: Google, GitHub, Facebook -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <!-- Google Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/google_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/google_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-            <!-- GitHub Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/github_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/github_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-            <!-- Facebook Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/facebook_signup_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/facebook_icon"
-                app:iconGravity="start"
-                app:iconPadding="8dp"
-                app:iconTint="@null"
-                app:strokeWidth="0dp" />
-
-        </LinearLayout>
-
         <!-- Login Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="29dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -228,4 +161,4 @@
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

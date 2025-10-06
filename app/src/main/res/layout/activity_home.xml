@@ -1,328 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home_layout"
+    android:id="@+id/home_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <!-- Welcome + Date -->
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="Welcome, User"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Tuesday, September 11"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvWelcome" />
-
-    <!-- Card 1: Mood Selector -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardMood"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/home_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@id/tvDate">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <!-- Title -->
-            <TextView
-                android:id="@+id/moodTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="How are you feeling today?"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <!-- Mood Buttons Grid -->
-            <GridLayout
-                android:id="@+id/gridMoods"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/moodTitle"
-                android:layout_toStartOf="@id/btnDiary"
-                android:layout_marginTop="16dp"
-                android:alignmentMode="alignMargins"
-                android:columnCount="3"
-                android:rowCount="2"
-                android:rowOrderPreserved="false"
-                android:useDefaultMargins="true">
-
-                <!-- Happy -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodHappy"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Happy"
-                    app:backgroundTint="@color/yellow"
-                    app:cornerRadius="40dp"
-                    app:icon="@drawable/mood_happy"
-                    app:iconTint="@android:color/black" />
-
-                <!-- Sad -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodSad"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Sad"
-                    app:backgroundTint="@color/blue"
-                    app:cornerRadius="40dp"
-                    app:icon="@drawable/mood_sad"
-                    app:iconTint="@android:color/black" />
-
-                <!-- Anxious -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodAnxious"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Anxious"
-                    app:backgroundTint="@color/purple"
-                    app:cornerRadius="50dp"
-                    app:icon="@drawable/mood_anxious"
-                    app:iconTint="@android:color/black" />
-
-                <!-- Tired -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodTired"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Tired"
-                    app:backgroundTint="@color/green"
-                    app:cornerRadius="40dp"
-                    app:icon="@drawable/mood_tired"
-                    app:iconTint="@android:color/black" />
-
-                <!-- Excited -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodExcited"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Excited"
-                    app:backgroundTint="@color/red"
-                    app:cornerRadius="40dp"
-                    app:icon="@drawable/mood_excited"
-                    app:iconTint="@android:color/black" />
-
-                <!-- Content -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMoodContent"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:contentDescription="Content"
-                    app:backgroundTint="@color/orange"
-                    app:cornerRadius="40dp"
-                    app:icon="@drawable/mood_content"
-                    app:iconTint="@android:color/black" />
-            </GridLayout>
-
-            <!-- Deflate in Diary button (moved next to moods) -->
-            <Button
-                android:id="@+id/btnDiary"
-                android:layout_width="102dp"
-                android:layout_height="66dp"
-                android:layout_alignTop="@id/gridMoods"
-                android:layout_alignBottom="@id/gridMoods"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginBottom="0dp"
-                android:backgroundTint="@color/white"
-                android:text="+        Deflate in Diary"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card 2: Today’s Mood + Activities -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@id/cardMood">
 
         <LinearLayout
+            android:id="@+id/home_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:weightSum="2">
+            android:orientation="vertical">
 
-            <!-- Today’s Mood -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="109dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Today's mood"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnTodayMood"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:text="😊"
-                    app:backgroundTint="@color/yellow"
-                    app:cornerRadius="35dp" />
-            </LinearLayout>
-
-            <!-- Activities -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activities"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSteps"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    app:icon="@drawable/ic_steps"
-                    app:iconTint="@android:color/black"
-                    app:backgroundTint="@color/light_blue"
-                    app:cornerRadius="35dp" />
-
-                <TextView
-                    android:id="@+id/tvStepsHome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="7500 steps" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card 3: Daily Inspiration -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardQuote"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@id/cardStats">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
+            <!-- Welcome + Date -->
             <TextView
-                android:id="@+id/DailyInspo"
+                android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daily Inspiration"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Welcome, User"
+                android:textColor="@color/black"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvQuote"
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/DailyInspo"
-                android:layout_marginTop="10dp"
-                android:text="“The only way to do great work is to love what you do.”\n- Steve Jobs" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card 4: Streak with Gradient -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardStreak"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@id/cardQuote"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        tools:layout_editor_absoluteX="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@drawable/streak_gradient">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🔥 5-day streak"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Keep it going!"
+                android:layout_marginStart="20dp"
+                android:text="Tuesday, September 11"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <ProgressBar
-                android:id="@+id/progressStreak"
-                style="?android:attr/progressBarStyleHorizontal"
+            <!-- Card 1: Mood Selector -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardMood"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="8dp"
-                android:max="7"
-                android:progress="5"
-                android:progressTint="@color/pink" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="2 more days to reach 7-day streak!"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
 
-    <!-- NavigationBar -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="16dp">
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/moodTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="How are you feeling today?"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Deflate in Diary button  -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDiary"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="70dp"
+                        android:layout_height="52dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="3dp"
+                        android:backgroundTint="@color/white"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="+ Deflate in Diary"
+                        android:textColor="@android:color/black"
+                        android:textSize="8sp"
+                        app:cornerRadius="20dp"
+                        app:strokeColor="@android:color/black"
+                        app:strokeWidth="1dp" />
+
+                    <!-- Mood buttons grid  -->
+                    <GridLayout
+                        android:id="@+id/gridMoods"
+                        android:layout_width="219dp"
+                        android:layout_height="145dp"
+                        android:layout_below="@id/moodTitle"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_toStartOf="@id/btnDiary"
+                        android:alignmentMode="alignMargins"
+                        android:columnCount="3"
+                        android:rowCount="2"
+                        android:rowOrderPreserved="false"
+                        android:useDefaultMargins="true">
+
+                        <!-- Happy -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodHappy"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Happy"
+                            app:backgroundTint="@color/yellow"
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_happy"
+                            app:iconTint="@android:color/black" />
+
+                        <!-- Sad -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodSad"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Sad"
+                            app:backgroundTint="@color/blue"
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_sad"
+                            app:iconTint="@android:color/black" />
+
+                        <!-- Anxious -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodAnxious"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Anxious"
+                            app:backgroundTint="@color/purple"
+                            app:cornerRadius="50dp"
+                            app:icon="@drawable/mood_anxious"
+                            app:iconTint="@android:color/black" />
+
+                        <!-- Tired -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodTired"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Tired"
+                            app:backgroundTint="@color/green"
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_tired"
+                            app:iconTint="@android:color/black" />
+
+                        <!-- Excited -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodExcited"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Excited"
+                            app:backgroundTint="@color/red"
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_excited"
+                            app:iconTint="@android:color/black" />
+
+                        <!-- Content -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMoodContent"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:contentDescription="Content"
+                            app:backgroundTint="@color/orange"
+                            app:cornerRadius="40dp"
+                            app:icon="@drawable/mood_content"
+                            app:iconTint="@android:color/black" />
+                    </GridLayout>
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <!-- Card 2: Today’s Mood + Activities -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="109dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Today's mood"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTodayMood"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:text="😊"
+                            app:backgroundTint="@color/yellow"
+                            app:cornerRadius="35dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Activities"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSteps"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            app:backgroundTint="@color/light_blue"
+                            app:cornerRadius="35dp"
+                            app:icon="@drawable/ic_steps"
+                            app:iconTint="@android:color/black"
+                            tools:ignore="SpeakableTextPresentCheck" />
+
+                        <TextView
+                            android:id="@+id/tvStepsHome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="7500 steps"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card 3: Daily Inspiration -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardQuote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/DailyInspo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Daily Inspiration"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvQuote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/DailyInspo"
+                        android:layout_marginTop="10dp"
+                        android:text="“The only way to do great work is to love what you do.”&#10;- Steve Jobs"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card 4: Streak with Gradient -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardStreak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/streak_gradient">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔥 5-day streak"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Keep it going!"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressStreak"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="8dp"
+                        android:max="7"
+                        android:progress="5"
+                        android:progressTint="@color/pink" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="2 more days to reach 7-day streak!"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!--Bottom navigation-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="#ECE4FF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
 
