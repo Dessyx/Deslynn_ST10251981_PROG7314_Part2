@@ -65,17 +65,6 @@
 - Extract the files and store the project in the location of choice.
 - Navigate to Android Studio.
 - To open the project, click File > Open > Choose the project.
-- 
-
-2. **Firebase Setup**
-   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Download `google-services.json` and place it in the `app/` directory
-   - Enable Authentication and Firestore in Firebase Console
-
-3. **Configure OAuth Providers**
-   - **Google**: Add your app's SHA-1 fingerprint to Firebase Console
-   - **Facebook**: Update `facebook_app_id` and `facebook_client_token` in `strings.xml`
-   - **GitHub**: Update `GITHUB_CLIENT_ID` in `SignInActivity.kt`
 
 4. **Build and Run**
    -  To run the application, click on the play button.
