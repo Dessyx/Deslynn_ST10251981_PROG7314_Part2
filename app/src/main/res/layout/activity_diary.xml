@@ -113,6 +113,7 @@
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
                     android:inputType="textMultiLine"
+                    android:textColor="@color/black"
                     android:gravity="top|start"/>
             </LinearLayout>
 
