@@ -22,7 +22,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+//-------------------------------------------------------------------------
+// Home screen activity
 class HomeActivity : AppCompatActivity() {
+    //-------------------------------------------------------------------------
+    // State and dependencies
     private lateinit var auth: FirebaseAuth
     private lateinit var prefs: android.content.SharedPreferences
     private var todayMood: String? = null
@@ -42,6 +46,8 @@ class HomeActivity : AppCompatActivity() {
     private fun todayKey() = df.format(Date())
 
 
+    //-------------------------------------------------------------------------
+    // Render today's mood on the main mood button and persist if requested
     private fun applyTodayMood(moodKey: String?, save: Boolean = false) {
         val btn = findViewById<MaterialButton>(R.id.btnTodayMood)
 
@@ -101,11 +107,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
+    // Load persisted mood for the current day
     private fun loadMoodForToday(): String? {
         val savedDate = prefs.getString("MOOD_DATE", null)
         return if (savedDate == todayKey()) prefs.getString("MOOD_KEY", null) else null
     }
 
+    //-------------------------------------------------------------------------
+    // Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -147,6 +156,7 @@ class HomeActivity : AppCompatActivity() {
 
         applyTodayMood(loadMoodForToday(), save = false)
 
+        // Mood selection actions
         btnMoodHappy.setOnClickListener { setMood("Happy") }
         btnMoodSad.setOnClickListener { setMood("Sad") }
         btnMoodAnxious.setOnClickListener { setMood("Anxious") }
@@ -180,6 +190,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
+    // Handle mood selection and fetch quotes
     private fun setMood(mood: String) {
         todayMood = mood
 
@@ -196,6 +208,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
+    // Fetch quotes by tag using Retrofit and update UI
     private fun fetchQuote(tag: String) {
         val call = RetrofitClient.instance.getQuotes(mood = tag)
 
@@ -224,6 +238,7 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
+    // Iterate through tags and try fallback tags when needed
     private fun tryNextTag() {
         currentTagIndex++
         if (currentTagIndex < currentMoodTags.size) {
@@ -239,4 +254,4 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 }
-
+// --------------------------------------------<<< End of File >>>------------------------------------------

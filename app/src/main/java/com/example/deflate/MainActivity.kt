@@ -8,7 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
+//-------------------------------------------------------------------------
+// Landing screen activity
 class MainActivity : AppCompatActivity() {
+    //-------------------------------------------------------------------------
+    // Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -19,7 +23,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Set up button click listener
+        //-------------------------------------------------------------------------
+        // Set up navigation buttons
         val letsBeginButton = findViewById<TextView>(R.id.lets_begin_button)
         letsBeginButton?.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -34,3 +39,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+// --------------------------------------------<<< End of File >>>------------------------------------------

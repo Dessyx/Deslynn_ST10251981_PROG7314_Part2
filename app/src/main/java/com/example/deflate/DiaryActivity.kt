@@ -14,8 +14,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+//-------------------------------------------------------------------------
+// Diary screen activity
 class DiaryActivity : AppCompatActivity() {
 
+    //-------------------------------------------------------------------------
+    // UI references
     private lateinit var btnBack: ImageView
     private lateinit var etEntry: EditText
     private lateinit var btnSave: Button
@@ -29,11 +33,15 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var btnMoodContent: Button
     private lateinit var bottomNav: BottomNavigationView
 
+    // Firebase
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+    // State
     private var selectedMood: String? = null
 
+    //-------------------------------------------------------------------------
+    // Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,6 +61,7 @@ class DiaryActivity : AppCompatActivity() {
         setupBottomNav()
     }
 
+    // View binding
     private fun initializeViews() {
         btnBack = findViewById(R.id.btnBack)
         etEntry = findViewById(R.id.etEntry)
@@ -68,6 +77,8 @@ class DiaryActivity : AppCompatActivity() {
         bottomNav = findViewById(R.id.bottomNavD)
     }
 
+    //-------------------------------------------------------------------------
+    // Event listeners
     private fun setupClickListeners() {
         btnBack.setOnClickListener { navigateToHome() }
 
@@ -88,12 +99,16 @@ class DiaryActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
+    // Select mood
     private fun setMood(mood: String) {
         selectedMood = mood
         Toast.makeText(this, "Mood selected: $mood", Toast.LENGTH_SHORT).show()
 
     }
 
+    //-------------------------------------------------------------------------
+    // Save diary entry to Firestore for the current user
     private fun saveDiaryEntry() {
         val user = auth.currentUser
         if (user == null) {
@@ -143,6 +158,7 @@ class DiaryActivity : AppCompatActivity() {
             }
     }
 
+    // Navigation helpers
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
@@ -181,3 +197,4 @@ class DiaryActivity : AppCompatActivity() {
         }
     }
 }
+// --------------------------------------------<<< End of File >>>------------------------------------------

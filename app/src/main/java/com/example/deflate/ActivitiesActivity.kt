@@ -1,6 +1,6 @@
 package com.example.deflate
 
-import android.content.Intent
+import android.content.Intent    // Imports
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -18,9 +18,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.util.Date
 
+//-------------------------------------------------------------------------
+// Activity screen activity
 class ActivitiesActivity : AppCompatActivity() {
 
-    private lateinit var etWeight: EditText
+    private lateinit var etWeight: EditText  // Declarations
     private lateinit var etSteps: EditText
     private lateinit var btnReset: Button
     private lateinit var btnSaveActivities: Button
@@ -33,6 +35,7 @@ class ActivitiesActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+    //-------------------------------------------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -265,3 +268,4 @@ class ActivitiesActivity : AppCompatActivity() {
         finish()
     }
 }
+// --------------------------------------------<<< End of File >>>------------------------------------------

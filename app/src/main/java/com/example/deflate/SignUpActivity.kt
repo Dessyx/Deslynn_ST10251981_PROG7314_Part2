@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
+//-------------------------------------------------------------------------
+// Sign Up screen activity
 class SignUpActivity : AppCompatActivity() {
 
     companion object {
@@ -30,10 +32,13 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var registerButton: MaterialButton
     private lateinit var loginLink: TextView
 
+    //-------------------------------------------------------------------------
     // Firebase instances
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
+    //-------------------------------------------------------------------------
+    // Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +61,8 @@ class SignUpActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
+    //-------------------------------------------------------------------------
+    // View binding
     private fun initializeViews() {
         nameEditText = findViewById(R.id.name_edittext)
         surnameEditText = findViewById(R.id.surname_edittext)
@@ -65,6 +72,8 @@ class SignUpActivity : AppCompatActivity() {
         loginLink = findViewById(R.id.login_link)
     }
 
+    //-------------------------------------------------------------------------
+    // Event listeners
     private fun setupClickListeners() {
         registerButton.setOnClickListener {
             handleRegistration()
@@ -75,6 +84,8 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
+    // Registration flow
     private fun handleRegistration() {
         val name = nameEditText.text.toString().trim()
         val surname = surnameEditText.text.toString().trim()
@@ -89,6 +100,7 @@ class SignUpActivity : AppCompatActivity() {
         registerUserWithFirebase(name, surname, username, password)
     }
 
+    // Input validation
     private fun validateInputs(name: String, surname: String, username: String, password: String): Boolean {
         var isValid = true
         clearErrors()
@@ -144,6 +156,7 @@ class SignUpActivity : AppCompatActivity() {
         return isValid
     }
 
+    // Clear validation errors
     private fun clearErrors() {
         nameEditText.error = null
         surnameEditText.error = null
@@ -151,6 +164,8 @@ class SignUpActivity : AppCompatActivity() {
         passwordEditText.error = null
     }
 
+    //-------------------------------------------------------------------------
+    // Firebase create user and store profile
     private fun registerUserWithFirebase(name: String, surname: String, username: String, password: String) {
         val email = "$username@deflate.com"
 
@@ -177,6 +192,7 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    // Save user document to Firestore
     private fun saveUserDataToFirestore(uid: String, name: String, surname: String, username: String, email: String) {
         val userData = hashMapOf(
             "uid" to uid,
@@ -199,6 +215,7 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    // Success handler
     private fun handleRegistrationSuccess(name: String, surname: String) {
         Toast.makeText(this, "Registration successful! Welcome $name $surname", Toast.LENGTH_LONG).show()
         registerButton.isEnabled = true
@@ -207,12 +224,14 @@ class SignUpActivity : AppCompatActivity() {
         navigateToLogin()
     }
 
+    // Error handler
     private fun handleRegistrationError(errorMessage: String) {
         Toast.makeText(this, "Registration failed: $errorMessage", Toast.LENGTH_LONG).show()
         registerButton.isEnabled = true
         registerButton.text = "Register"
     }
 
+    // Clear form inputs
     private fun clearForm() {
         nameEditText.text.clear()
         surnameEditText.text.clear()
@@ -221,9 +240,11 @@ class SignUpActivity : AppCompatActivity() {
         clearErrors()
     }
 
+    // Navigation to Sign In
     private fun navigateToLogin() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)
         finish()
     }
 }
+// --------------------------------------------<<< End of File >>>------------------------------------------

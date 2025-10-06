@@ -16,11 +16,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
 
+//-------------------------------------------------------------------------
+// Settings screen activity
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var tvUserName: TextView
 
+    //-------------------------------------------------------------------------
+    // Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -37,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
         val btnDeleteAccount: Button = findViewById(R.id.btnDeleteAccount)
 
 
-// Show logged-in user name or email
+        // Show logged-in user name or email
         val user = auth.currentUser
 
         val currentName = user?.displayName ?: user?.email?.substringBefore("@") ?: "User"
@@ -51,7 +55,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        // Save new details
+        // Save new details (name/password)
         btnSave.setOnClickListener {
             val newName = etName.text.toString().trim()
             val newPass = etPassword.text.toString().trim()
@@ -65,6 +69,7 @@ class SettingsActivity : AppCompatActivity() {
                     .set(userMap, SetOptions.merge())
 
 
+                // Update profile display name (and mirror to Firestore)
                 if (newName.isNotEmpty() && newName != user.displayName) {
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName(newName)
@@ -97,6 +102,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
 
 
+                // Update password
                 if (newPass.isNotEmpty()) {
                     user.updatePassword(newPass).addOnCompleteListener { passTask ->
                         if (passTask.isSuccessful) {
@@ -167,4 +173,4 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-
+// --------------------------------------------<<< End of File >>>------------------------------------------
