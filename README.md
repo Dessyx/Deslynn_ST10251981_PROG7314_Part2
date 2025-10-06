@@ -23,22 +23,16 @@
 - **Date Display**: Current date with beautiful formatting
 - **Quick Navigation**: Easy access to all app features
 
-### 📊 Activity Tracking
-- **Weight Monitoring**: Track your weight with automatic data persistence
-- **Step Counting**: Log daily step counts
-- **Data History**: View your latest recorded values
-- **Cloud Storage**: All data synced with Firebase Firestore
-
 ### 📖 Personal Diary
 - **Daily Entries**: Write and save personal thoughts
 - **Mood Integration**: Link diary entries with your daily mood
 - **Privacy**: Secure storage of personal reflections
 
-### 📅 Calendar & Insights
-- **Calendar View**: Visual representation of your wellness journey
-- **Data Insights**: Analytics and trends from your tracked activities
-- **Historical Data**: Review past entries and progress
-
+### 📊 Activity Tracking
+- **Weight Monitoring**: Track your weight with automatic data persistence
+- **Step Counting**: Log daily step counts
+- **Cloud Storage**: All data synced with Firebase Firestore
+- 
 ### ⚙️ Settings & Profile
 - **User Profile Management**: Update personal information
 - **App Preferences**: Customize your experience
@@ -52,9 +46,8 @@
 - **Architecture**: MVVM with Activities
 - **Build System**: Gradle with Kotlin DSL
 
-  ### External APIs
+  ### External API
 - **FavQs API**: For inspirational quotes based on mood
-- **GitHub OAuth**: For GitHub sign-in integration
 
 1. **Installation**
 - Within the repository, click on the "<> Code" drop down on the far right next to the "Go to file" and "+" buttons.
@@ -66,7 +59,7 @@
 - Navigate to Android Studio.
 - To open the project, click File > Open > Choose the project.
 
-4. **Build and Run**
+2. **Build and Run**
    -  To run the application, click on the play button.
 
    ## 🔐 Security Features
