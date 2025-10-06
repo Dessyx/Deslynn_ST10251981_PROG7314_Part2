@@ -3,7 +3,11 @@
 **Deflate** is an Android application designed to help users track their daily activities, mood, and wellness journey. The app provides a holistic approach to personal health management with features for activity tracking, mood monitoring, diary entries, and inspirational quotes.
 
 ## Overview
-
+<p> <img src="Screenshots/Landing.png" width="200"> 
+  <img src="Screenshots/Home.png" width="200"> 
+  <img src="Screenshots/Diary" width="200">
+  <img src="Screenshots/Activities" width="200">
+</p>
 
 ## 📱 Features
 
@@ -100,4 +104,4 @@ The app intelligently selects inspirational quotes based on your current mood:
 - Real-time updates across devices
 
 ## 📺 Youtube
-- link: 
+- link: https://www.youtube.com/watch?v=8cBRrMAoGz0 
