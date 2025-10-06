@@ -5,8 +5,8 @@
 ## Overview
 <p> <img src="Screenshots/Landing.png" width="200"> 
   <img src="Screenshots/Home.png" width="200"> 
-  <img src="Screenshots/Diary" width="200">
-  <img src="Screenshots/Activities" width="200">
+  <img src="Screenshots/Diary.png" width="200">
+  <img src="Screenshots/Activities.png" width="200">
 </p>
 
 ## 📱 Features
