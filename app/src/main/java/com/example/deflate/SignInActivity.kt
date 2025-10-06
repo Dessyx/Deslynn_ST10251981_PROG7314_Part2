@@ -34,6 +34,8 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
 
 
+//-------------------------------------------------------------------------
+// Sign In screen activity
 class SignInActivity : AppCompatActivity() {
 
 
@@ -63,6 +65,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var callbackManager: CallbackManager
 
 
+    //-------------------------------------------------------------------------
     //  Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +78,8 @@ class SignInActivity : AppCompatActivity() {
             insets
         }
 
-        // Initiate Firebase
+        //-------------------------------------------------------------------------
+        // Initiate Firebase and SDKs
         auth = FirebaseAuth.getInstance()
         configureGoogleSignIn()
         initializeFacebook()
@@ -86,6 +90,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
+    //-------------------------------------------------------------------------
     // Setup
     private fun initViews() {
         usernameEditText = findViewById(R.id.username_edittext)
@@ -106,6 +111,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
+    //-------------------------------------------------------------------------
     //  Email/Password Authentication
     private fun handleSignIn() {
         val input = usernameEditText.text.toString().trim()
@@ -205,6 +211,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
+    //-------------------------------------------------------------------------
     //  Google Authentication
     private fun configureGoogleSignIn() {
         val webClientId = getString(R.string.default_web_client_id)
@@ -278,6 +285,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------
     //  Facebook Authentication
     private fun initializeFacebook() {
         callbackManager = CallbackManager.Factory.create()
@@ -321,6 +329,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
+    //-------------------------------------------------------------------------
     // GitHub Authentication
     private fun signInWithGitHub() {
         if (GITHUB_CLIENT_ID == "YOUR_GITHUB_CLIENT_ID") {
@@ -412,3 +421,4 @@ class SignInActivity : AppCompatActivity() {
     }
 
 }
+// --------------------------------------------<<< End of File >>>------------------------------------------
