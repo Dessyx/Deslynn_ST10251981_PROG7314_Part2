@@ -209,7 +209,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     //-------------------------------------------------------------------------
-    // Fetch quotes by tag using Retrofit and update UI
+    // Fetch quotes by tag using Retrofit and update UI (ChatGPT, 2025)
     private fun fetchQuote(tag: String) {
         val call = RetrofitClient.instance.getQuotes(mood = tag)
 
